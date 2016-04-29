@@ -43,7 +43,7 @@ router.post('/login',function (req, res, next) {
     var password = req.body.password;
 
     User.findOne({username: username, password: password}, function (err, user) {
-        console.log(user);
+        //console.log(user);
         if (err){
             req.session.success = false;
             console.log(err);

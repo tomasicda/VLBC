@@ -6,8 +6,11 @@ var dbConnections = require('./DAO/DBConnection');
 var session = require('express-session');
 var mongoose = require ('mongoose');
 var bodyParser = require('body-parser');
+
+// ============== Routes ==============
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var admin = require('./routes/admin');
+// ============== Routes Ends==============
 
 var app = express();
 
@@ -36,7 +39,7 @@ app.use(session(
 ));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/admin', admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

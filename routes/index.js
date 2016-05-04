@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../Models/User');
+var five = require("johnny-five");
+
 var dbConnection = require('../DAO/DBConnection');
 
 /* GET home page. */
@@ -27,6 +29,12 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/test', restrict,function (req, res){
+    var board = new five.Board();
+
+    board.on("ready", function() {
+        var led = new five.Led(13);
+        led.blink(500);
+    });
     res.render('test', {
         title: 'Test | VLBC'
     });

@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('VLBC:server');
 var http = require('http');
+var five = require("johnny-five");
 
 /**
  * Get port from environment and store in Express.
@@ -25,6 +26,19 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
+
+var board = new five.Board();
+
+board.on("ready", function() {
+  console.log("Made it bra");
+  // Create a standard `led` component instance
+  var led = new five.Led(13);
+
+  // "blink" the led in 500ms
+  // on-off phase periods
+  led.blink(500);
+});
+
 
 server.listen(port);
 server.on('error', onError);

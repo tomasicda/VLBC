@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../Models/User');
-var five = require("johnny-five");
-
 var dbConnection = require('../DAO/DBConnection');
+var restrict = require('../DAO/Session');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -11,14 +10,6 @@ router.get('/', function (req, res, next) {
         title: 'Login | VLBC', success: req.session.success
     });
 });
-
-function restrict(req, res, next) {
-    if (req.session.success) {
-        next();
-    } else {
-        res.redirect('/');
-    }
-}
 
 router.get('/logout', function(req, res){
     // destroy the user's session to log them out
@@ -29,12 +20,6 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/test', restrict,function (req, res){
-    var board = new five.Board();
-
-    board.on("ready", function() {
-        var led = new five.Led(13);
-        led.blink(500);
-    });
     res.render('test', {
         title: 'Test | VLBC'
     });

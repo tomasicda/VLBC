@@ -11,6 +11,7 @@
     "ejs": "^2.4.1",
     "express": "~4.13.1",
     "express-session": "^1.13.0",
+    "johnny-five": "^0.9.45",
     "mongodb": "^2.1.16",
     "mongoose": "^4.4.11",
     "morgan": "~1.6.1",

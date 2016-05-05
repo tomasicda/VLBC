@@ -7,7 +7,27 @@
 var app = require('../app');
 var debug = require('debug')('VLBC:server');
 var http = require('http');
-var five = require("johnny-five");
+
+
+
+var duino = require( 'iotduino'),
+    pinMode = duino.PinMode, pinState = duino.PinState,
+    pins = duino.Pins, ledPin = pins.GPIO13;
+
+// pin 13 (GPIO13) is set as OUTPUT
+duino.pinMode( ledPin, pinMode.OUTPUT);
+// repeat every 500 milliseconds, 2 times per second
+setInterval( function () {
+  // alternate the pin state between HIGH and LOW
+  duino.digitalWrite( ledPin, !duino.digitalRead( ledPin));
+}, 500);
+
+
+
+
+
+
+
 
 /**
  * Get port from environment and store in Express.
@@ -27,17 +47,22 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-var board = new five.Board();
 
-board.on("ready", function() {
-  console.log("Made it bra");
-  // Create a standard `led` component instance
-  var led = new five.Led(13);
 
-  // "blink" the led in 500ms
-  // on-off phase periods
-  led.blink(500);
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 server.listen(port);

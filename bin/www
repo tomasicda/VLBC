@@ -24,6 +24,36 @@ setInterval( function () {
 
 
 
+/**
+  Testing i2c library
+ */
+
+var i2c = require('i2c-bus'),
+    i2c1;
+
+var ADDR = 0x20;
+
+i2c1 = i2c.open(1, function (err) {
+  if (err) throw err;
+
+  (function readId() {
+    i2c1.readByte(ADDR, function (err, id) {
+      if (err) throw err;
+      console.log(id);
+      readId();
+    });
+  }());
+});
+
+
+
+
+
+
+
+
+
+
 
 
 

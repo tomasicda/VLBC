@@ -47,7 +47,6 @@ router.post('/login',function (req, res, next) {
             req.session.success = false;
             res.redirect('/');
             return res.status(401).send();
-
         }
         req.session.success = true;
         res.render('homePage', {

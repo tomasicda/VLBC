@@ -8,19 +8,25 @@
 
     <% for (var counter = 0; counter < 8; ++counter){ %>
 
+    <form method="POST" action="/manualSwitch">
+
         <label class="vlbc-label-margin" >Channel <%= allChannels[counter].channelNumber %></label>
 
-        <button type="button" class="btn btn-success vlbc-margin">On</button>
-        <button type="button" class="btn btn-danger vlbc-margin">Off</button>
+        <input type="hidden" name="channelNumber" value="<%= allChannels[counter].channelNumber %>">
 
-        <% if (allChannels[counter].status === true) { %>
+        <button type="submit" name="on" class="btn btn-success vlbc-margin" value="true">On</button>
+        <button type="submit" name="off" class="btn btn-danger vlbc-margin" value="false">Off</button>
+
+        <% if (allChannels[counter].status === false) { %>
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         <% } else { %>
             <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
         <% } %>
-        <br/>
-        <br/>
+
+    </form>
     <% } %>
+    <br/>
 </div>
+
 
 <% include partials/footer.ejs %>

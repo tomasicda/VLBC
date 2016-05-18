@@ -88,6 +88,22 @@ h1 {
 .vlbc-background-colour-blue {
   background-color: #003b5d;
 }
+
+.vlbc-label-margin{
+  text-align: center;
+}
+
+.buttonsManualSwitch{
+  background-color: white;
+  margin-left: 30%;
+  margin-right: 30%;
+  text-align: center;
+}
+
+.vlbc-margin{
+  padding: 1%;
+  width: 10%;
+}
 /*==================VLBC Special Colours Region Ends=======================*/
 
 

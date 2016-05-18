@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 // ============== Routes ==============
 var routes = require('./routes/index');
 var admin = require('./routes/admin');
+var manualSwitch = require('./routes/manualSwitch');
 // ============== Routes Ends==============
 
 var app = express();
@@ -40,6 +41,7 @@ app.use(session(
 
 app.use('/', routes);
 app.use('/admin', admin);
+app.use('/manualSwitch', manualSwitch);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

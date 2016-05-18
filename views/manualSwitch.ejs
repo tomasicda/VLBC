@@ -1,0 +1,26 @@
+<% include partials/header.ejs %>
+<% include partials/navbar.ejs %>
+<h1 class="text-center vlbc-colour-orange">Manual Switch</h1>
+<div class="buttonsManualSwitch">
+
+
+    <br/>
+
+    <% for (var counter = 0; counter < 8; ++counter){ %>
+
+        <label class="vlbc-label-margin" >Channel <%= allChannels[counter].channelNumber %></label>
+
+        <button type="button" class="btn btn-success vlbc-margin">On</button>
+        <button type="button" class="btn btn-danger vlbc-margin">Off</button>
+
+        <% if (allChannels[counter].status === true) { %>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        <% } else { %>
+            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+        <% } %>
+        <br/>
+        <br/>
+    <% } %>
+</div>
+
+<% include partials/footer.ejs %>

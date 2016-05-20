@@ -3,6 +3,7 @@ var manualSwitch = express.Router();
 var relayChannel = require('../Models/relayChannel');
 var dbConnection = require('../DAO/DBConnection');
 var restrict = require('../DAO/Session');
+var i2c = require('../Helpers/isquarecHelper');
 
 /* GET manualSwitch page. */
 manualSwitch.get('/', restrict,function (req, res, next) {
@@ -15,6 +16,9 @@ manualSwitch.get('/', restrict,function (req, res, next) {
         if (!channels){
             return res.status(401).send();
         }
+
+        i2c.updateAll(channels);
+
         res.render('manualSwitch.ejs', {
             title: 'Manual Switch | VLBC',
             allChannels: channels
@@ -23,8 +27,7 @@ manualSwitch.get('/', restrict,function (req, res, next) {
 });
 
 manualSwitch.post('/', restrict,function (req, res, next) {
-    var channelOn = req.body.on;
-    var channelOff = req.body.off;
+ 
     var channelNumber = req.body.channelNumber;
     var status;
     if (req.body.on !== undefined){
@@ -32,6 +35,8 @@ manualSwitch.post('/', restrict,function (req, res, next) {
     } else{
         req.body.off;
     }
+
+    i2c.updateOne(channelNumber, status, 32);
 
     relayChannel.update({channelNumber: channelNumber},
         {$set: {status: status}

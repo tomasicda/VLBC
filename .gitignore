@@ -21,10 +21,11 @@ coverage
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+# build/Release
 
 # Dependency directory
 node_modules
+!/node_modules/pcduino-node-i2c
 
 # Optional npm cache directory
 .npm

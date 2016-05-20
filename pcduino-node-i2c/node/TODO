@@ -1,0 +1,14 @@
+
+
+TODO
+
+var i2c = require(.....);
+
+
+i2c.init();
+
+
+i2c.enable(1, true);
+
+
+

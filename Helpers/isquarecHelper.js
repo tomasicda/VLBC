@@ -1,7 +1,7 @@
 /**
  * Created by preetzdomain on 20/05/2016.
  */
-var i2cLib = require('./node/build/Release/pcduino-i2c');
+var i2cLib = require('pcduino-node-i2c/node/build/Release/pcduino-i2c');
 
 
 

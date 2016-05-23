@@ -16,8 +16,8 @@ manualSwitch.get('/', restrict,function (req, res, next) {
         if (!channels){
             return res.status(401).send();
         }
-
-        i2c.updateAll(channels);
+	
+        i2c.updateAll(channels, 32);
 
         res.render('manualSwitch.ejs', {
             title: 'Manual Switch | VLBC',
@@ -35,8 +35,6 @@ manualSwitch.post('/', restrict,function (req, res, next) {
     } else{
         req.body.off;
     }
-
-    i2c.updateOne(channelNumber, status, 32);
 
     relayChannel.update({channelNumber: channelNumber},
         {$set: {status: status}

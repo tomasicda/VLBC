@@ -1,5 +1,106 @@
 <% include partials/header.ejs %>
-<% include partials/navbar.ejs %>
-<h1 class="text-center vlbc-colour-orange">Admin Page</h1>
+<% include partials/adminSideBar.ejs %>
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<div id="wrapper">
+    <h1 class="text-center vlbc-colour-orange">Admin Page</h1>
+
+    <!--<h1 class="text-center vlbc-colour-orange" id="emptyH1"></h1> -->
+
+
+    <div id="addProfileShowBtn">
+        <button type="button" id="AddProfileBtn" class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">Add Load Profile<span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span>
+        </button>
+
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Load Profile</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="col-md-2 text-center">Name</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" value="" placeholder="Profile Name">
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+
+                    <div class="row">
+                        <table class="table col-md-12 text-center">
+
+                            <% for(var i = 1; i <= 21; i++) {%>
+                            <tr class="col-md-4">
+                                <td class="text-center">
+                                    <p>Ch: <%= i %></p>
+                                </td>
+                                <td class="centre">
+                                    <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+                                </td>
+                            </tr>
+                            <% } %>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary col-md-10 col-sm-10">Add</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        var showButton = false;
+
+        $('#loadProfiles').click(function () {
+
+            if(!showButton) {
+                $('#addProfileShowBtn').show();
+                showButton = true;
+            }
+
+
+            var data = {};
+            data.title = "title";
+            data.message = "message";
+
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: 'admin/loadProfiles',
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+
+                    var result = JSON.stringify(data);
+
+
+                    $('#emptyH1').append(result);
+
+
+                }
+            });
+
+        });
+    });
+
+
+</script>
+
 
 <% include partials/footer.ejs %>

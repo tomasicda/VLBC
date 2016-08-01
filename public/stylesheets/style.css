@@ -131,3 +131,27 @@ h1 {
 /*==================Bootstrap Override Region Ends=======================*/
 
 
+
+
+
+
+/*==================Admin Page Load Profile=======================*/
+
+
+#AddProfileBtn {
+    margin: 2em;
+}
+
+#AddProfileBtnText {
+
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+#addProfileShowBtn {
+    display: none;
+}
+
+
+
+/*==================Admin Page Load Profile Ends=======================*/

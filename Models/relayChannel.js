@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 
 var relayChannelSchema = new mongoose.Schema({
     channelNumber: Number,
-    status: Boolean
+    status: Boolean,
+    switchCount: Number
 });
 
 var relayChannel = mongoose.model('relayChannel', relayChannelSchema, 'relayChannel');

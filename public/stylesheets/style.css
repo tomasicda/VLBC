@@ -152,6 +152,10 @@ h1 {
     display: none;
 }
 
+#timeSchedulesProfiles{
+  display: none;
+}
+
 
 
 /*==================Admin Page Load Profile Ends=======================*/

@@ -8,8 +8,9 @@
 <div id="wrapper">
     <h1 class="text-center vlbc-colour-orange">Admin Page</h1>
 
-    <!--<h1 class="text-center vlbc-colour-orange" id="emptyH1"></h1> -->
+    <a class="apple" value="1">juyjyuy</a>
 
+    <!--<h1 class="text-center vlbc-colour-orange" id="emptyH1"></h1>-->
 
     <div id="addProfileShowBtn">
         <button type="button" id="AddProfileBtn" class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">
@@ -134,8 +135,6 @@
                     <br/>
                     <br/>
 
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary col-md-10 col-sm-10">Add</button>
@@ -199,6 +198,89 @@
             }
 
         });
+
+        $('#relayChannels').click(function(event){
+
+            event.preventDefault();
+
+            var data = {};
+            data.test = 'Apple testing';
+
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: 'admin/relayChannels',
+                success: function(data) {
+
+//                    $.each(data,function(index,obj)
+//                    {
+//                        alert(obj.channelNumber);
+//                    });
+
+                    var toAppend = '<div class=\"vlbc-table\">' +
+                                    '<table class=\"table table-bordered>\"' +
+                                        '<thread>' +
+                                            '<tr>' +
+                                                '<th>Channel #</th>' +
+                                                '<th>Current status</th>' +
+                                                '<th>Switch Counts</th>' +
+                                                '<th>Reset Counts</th>' +
+                                            '</tr>' +
+                                        '</thread>' +
+                                        '<tbody>';
+
+                                        $.each(data, function(index, obj) {
+
+                                            //console.log(obj.channelNumber, obj.status, obj.switchCount);
+
+                                            toAppend += '<tr>' +
+                                                '<td>' + obj.channelNumber +'</td>' +
+                                                '<td>' + obj.status + '</td>' +
+                                                '<td>' + obj.switchCount + '</td>' +
+                                                '<td><button onclick="myFunction()">Click me</button></td>' +
+                                            '</tr>';
+                                        });
+
+                    toAppend +='</tbody>' +
+
+                                   '</table></div>';
+
+                    //console.log(toAppend);
+
+
+                    $('#wrapper').append(toAppend);
+
+                },
+                error: function(error){
+                    console.log(JSON.stringify(error));
+                }
+
+
+            });
+
+
+        });
+
+
+        function myFunction() {
+            document.getElementById("demo").innerHTML = "Hello World";
+        }
+
+
+
+
+        $('.apple').click(function(){
+
+
+            alert($(this).attr('value'));
+
+
+            //alert($(this).attribute('value'));
+        });
+
+
+
+
     });
 
 </script>

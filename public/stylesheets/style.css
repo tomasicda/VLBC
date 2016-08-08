@@ -4,6 +4,7 @@ body, html {
 
 h1 {
   text-decoration: solid;
+  margin-top: 2em;
 }
 
 /*==================Login Region Starts=======================*/
@@ -100,6 +101,19 @@ h1 {
   text-align: center;
 }
 
+.vlbc-table {
+  background-color: lightgray;
+  margin-left: 20%;
+  margin-right: 20%;
+  text-align: center;
+  margin-top: 1.5em;
+}
+
+table, th, td {
+  text-align: center;
+
+}
+
 .vlbc-margin{
   padding: 1%;
   width: 10%;
@@ -128,6 +142,24 @@ h1 {
 .btn:hover {
   color: white;
 }
+
+
+
+
+.affix {
+  top:0;
+  width: 100%;
+  z-index: 9999 !important;
+}
+
+.affix ~ .container-fluid {
+  position: relative;
+  top: 50px;
+}
+
+
+
+
 /*==================Bootstrap Override Region Ends=======================*/
 
 

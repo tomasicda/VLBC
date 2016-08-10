@@ -33,6 +33,26 @@
     <!--<pre id="out"></pre>-->
     <br/>
 
+    <div class="vlbc-table">
+        <table class="table table-bordered table-striped table-hover">
+            <thread>
+                <tr>
+                    <th>Time (HH:MM)</th>
+                    <th>Total Watts</th>
+                </tr>
+            </thread>
+            <tbody>
+            <% loadProfiles.forEach(function(profile) { %>
+            <tr>
+                <td><%= profile.Time.Hours %> : <%= profile.Time.Minutes %></td>
+                <td><%= profile.Power %></td>
+                <!--<td><button class="btn btn-primary" onclick="myFunction()">Reset counts</button></td>-->
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+
 </div>
     <!-- uncomment the next line here and in xlsxworker.js for encoding support -->
     <!--<script src="dist/cpexcel.js"></script>-->

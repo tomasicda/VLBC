@@ -16,25 +16,36 @@ admin.get('/', restrict,function (req, res, next) {
 /* GET home page. */
 admin.get('/loadProfiles', restrict,function (req, res, next) {
 
-    var title = req.body.title;
-
-    // relayChannel.find(function (err, channels) {
-    //     if (err){
-    //         console.log(err);
-    //         return res.status(500).send();
-    //     }
-    //     if (!channels){
-    //         return res.status(401).send();
-    //     }
-    //
-    //     res.send(channels);
-
-    // });
+    var date = new Date();
+    var getHour = date.getHours();
+    var getMin = date.getMinutes();
+    var getSec = date.getSeconds();
 
 
-    res.render('loadProfiles', {
-        title: 'load profiles - admin | VLBC'
+    console.log(getHour + ":" + getMin + " " + getSec);
+
+    loadProfile.find(function (err, profiles) {
+        if (err){
+            console.log(err);
+            return res.status(500).send();
+        }
+        if (!profiles){
+            return res.status(401).send();
+        }
+
+        var count = 0;
+        profiles.forEach(function(profile) {
+            
+        });
+
+        
+        res.render('loadProfiles', {
+            title: 'load profiles - admin | VLBC',
+            loadProfiles: profiles
+        });
+        
     });
+
 });
 
 
@@ -81,6 +92,7 @@ admin.get('/timeSchedules', restrict,function (req, res, next) {
     //     res.send(channels);
     // });
 
+
     res.render('timeSchedules', {
         title: 'time shedules - admin | VLBC'
     });
@@ -92,7 +104,6 @@ admin.get('/timeSchedules', restrict,function (req, res, next) {
 /* getting relay channel details with ajax call */
 admin.get('/relayChannels', restrict, function(req, res, next){
 
-
     relayChannel.find(function (err, channels) {
         if (err){
             console.log(err);
@@ -102,12 +113,10 @@ admin.get('/relayChannels', restrict, function(req, res, next){
             return res.status(401).send();
         }
 
-        //console.log(channels);
-
-        channels.forEach(function(channel) {
-           console.log(channel.channelNumber);
-
-        });
+        // channels.forEach(function(channel) {
+        //    console.log(channel.channelNumber);
+        //
+        // });
 
         res.render('relayChannels', {
             title: 'relay channels - admin | VLBC',

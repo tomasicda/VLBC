@@ -6,6 +6,7 @@ var dbConnections = require('./DAO/DBConnection');
 var session = require('express-session');
 var mongoose = require ('mongoose');
 var bodyParser = require('body-parser');
+var LoadProfileManager = require('./Helpers/LoadProfileManager');
 
 // ============== Routes ==============
 var routes = require('./routes/index');
@@ -50,6 +51,9 @@ app.use(function(req, res, next) {
   next(err);
 });
 
+//Run time shedule manager (./Helper/LoadProfileManager.js)
+LoadProfileManager.timeSheduler();
+
 // error handlers
 
 // development error handler
@@ -63,6 +67,7 @@ if (app.get('env') === 'development') {
     });
   });
 }
+
 
 // production error handler
 // no stacktraces leaked to user

@@ -28,6 +28,7 @@ admin.get('/loadProfiles', restrict,function (req, res, next) {
     //     }
     //
     //     res.send(channels);
+
     // });
 
 
@@ -101,7 +102,12 @@ admin.get('/relayChannels', restrict, function(req, res, next){
             return res.status(401).send();
         }
 
-        console.log(channels);
+        //console.log(channels);
+
+        channels.forEach(function(channel) {
+           console.log(channel.channelNumber);
+
+        });
 
         res.render('relayChannels', {
             title: 'relay channels - admin | VLBC',

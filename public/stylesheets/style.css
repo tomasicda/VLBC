@@ -111,7 +111,6 @@ h1 {
 
 table, th, td {
   text-align: center;
-
 }
 
 .vlbc-margin{
@@ -142,9 +141,6 @@ table, th, td {
 .btn:hover {
   color: white;
 }
-
-
-
 
 .affix {
   top:0;

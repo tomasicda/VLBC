@@ -23,7 +23,8 @@ var LoadProfileManager = module.exports = {
                 function (err, profile) {
                     if (err) throw err;
 
-                    console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes )
+                    if (profile != null)
+                        console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes);
 
                 });
         }

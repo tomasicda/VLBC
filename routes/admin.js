@@ -126,5 +126,20 @@ admin.get('/relayChannels', restrict, function(req, res, next){
 
 });
 
+admin.post('/resetRelayCount', restrict, function(req, res, next){
+
+    var data = req.body;
+
+    relayChannel.findOneAndUpdate({channelNumber: data.channelNumber},
+                                  {$set: {switchCount: 0}},
+                                  {new: true}, function (err, channel) {
+
+        if(err) throw err;
+
+        res.send({switchCount: channel.switchCount});
+    });
+
+});
+
 
 module.exports = admin;

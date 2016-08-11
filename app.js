@@ -51,9 +51,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-//Run time shedule manager (./Helper/LoadProfileManager.js)
-LoadProfileManager.timeSheduler();
-
 // error handlers
 
 // development error handler
@@ -78,5 +75,9 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+
+//Run time shedule manager (./Helper/LoadProfileManager.js)
+LoadProfileManager.timeSheduler();
 
 module.exports = app;

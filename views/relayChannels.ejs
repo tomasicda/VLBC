@@ -4,7 +4,7 @@
 <div id="wrapper">
     <h1 class="text-center vlbc-colour-orange">Relay Channels</h1>
     <div class="vlbc-table">
-        <table class="table table-bordered table-striped table-hover">
+        <table class="table table-bordered table-striped">
             <thread>
                 <tr>
                     <th>Channel #</th>
@@ -18,12 +18,40 @@
                 <tr>
                     <td><%= channel.channelNumber %></td>
                     <td><%= channel.status %></td>
-                    <td><%= channel.switchCount %></td>
-                    <td><button class="btn btn-primary" onclick="myFunction()">Reset counts</button></td>
+                    <td id="switchCountChannel<%= channel.channelNumber %>"><%= channel.switchCount %></td>
+                    <td><button class="btn btn-primary resetRelaySwitchCounts" data-channel="<%= channel.channelNumber %>">Reset counts</button></td>
                 </tr>
             <% }); %>
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.resetRelaySwitchCounts').click(function(){
+
+            event.preventDefault();
+
+            var data = {
+                channelNumber: $(this).attr('data-channel')
+            };
+
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: 'resetRelayCount',
+                success: function (channel) {
+                    $('#switchCountChannel' + data.channelNumber).html(channel.switchCount);
+                }
+            });
+
+
+        });
+    });
+
+</script>
 <% include partials/footer.ejs %>

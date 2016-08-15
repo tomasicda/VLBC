@@ -77,11 +77,10 @@ var i2c = module.exports = {
         i2cLib.enable(i2c.channelsNumber);
     },
 	
-	automaticUpdate: function () {
+	automaticUpdate: function (profile) {
 
 		i2c.channelsNumber = 0;
 		var profilePower = profile.Power;
-		var channelsAndWatts = [];
 
 		relayChannel.find({}).sort({watts: 'desc'}).exec(function(err, channels) {
 			if (err){
@@ -92,22 +91,12 @@ var i2c = module.exports = {
 				return res.status(401).send();
 			}
 
-			channels.forEach(function(channel) {
-
-				var channelN = channel.channelNumber;
-				var channelWatts = channel.watts;
-				var data = {};
-				data[channelN] = channelWatts;
-
-				channelsAndWatts.push(data);
-			});
-
 
 			var counter = 1;
 
-			channelsAndWatts.forEach(function(ch) {
+			channels.forEach(function(ch) {
 
-				if (profilePower <= ch.watts) {
+				if (ch.watts <= profilePower) {
 
 					profilePower = ch.watts - profilePower;
 

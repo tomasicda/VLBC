@@ -26,13 +26,10 @@ var LoadProfileManager = module.exports = {
 
                     if (profile != null) {
 
-                        i2c.automaticUpdate();
+                        i2c.automaticUpdate(profile);
+                        console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes + " power: " + profile.Power);
 
                     }
-
-
-
-                        console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes + " power: " + profile.Power);
 
                 });
         }

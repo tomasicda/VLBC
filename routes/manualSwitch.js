@@ -3,7 +3,7 @@ var manualSwitch = express.Router();
 var relayChannel = require('../Models/relayChannel');
 var dbConnection = require('../DAO/DBConnection');
 var restrict = require('../DAO/Session');
-//var i2c = require('../Helpers/isquarecHelper');
+var i2c = require('../Helpers/isquarecHelper');
 
 /* GET manualSwitch page. */
 manualSwitch.get('/', restrict,function (req, res, next) {

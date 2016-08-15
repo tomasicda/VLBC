@@ -115,6 +115,7 @@ admin.get('/relayChannels', restrict, function(req, res, next){
 
         // channels.forEach(function(channel) {
         //    console.log(channel.channelNumber);
+        //     console.log(channel.watts);
         //
         // });
 

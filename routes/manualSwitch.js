@@ -17,7 +17,7 @@ manualSwitch.get('/', restrict,function (req, res, next) {
             return res.status(401).send();
         }
 	
-        //i2c.updateAll(channels, 32);
+        i2c.updateAll(channels, 32);
 
         res.render('manualSwitch.ejs', {
             title: 'Manual Switch | VLBC',
@@ -36,18 +36,18 @@ manualSwitch.post('/', restrict,function (req, res, next) {
         req.body.off;
     }
 
-    // relayChannel.update({channelNumber: channelNumber},
-    //     {$set: {status: status}
-    // }, function (err, channels) {
-    //         if (err){
-    //             console.log(err);
-    //             return res.status(500).send();
-    //         }
-    //         if (!channels){
-    //             return res.status(401).send();
-    //         }
-    //     res.redirect('/manualSwitch');
-    // });
+    relayChannel.update({channelNumber: channelNumber},
+        {$set: {status: status}
+    }, function (err, channels) {
+            if (err) {
+                console.log(err);
+                return res.status(500).send();
+            }
+            if (!channels){
+                return res.status(401).send();
+            }
+        res.redirect('/manualSwitch');
+    });
 });
 
 module.exports = manualSwitch;

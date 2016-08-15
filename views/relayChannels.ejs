@@ -9,6 +9,7 @@
                 <tr>
                     <th>Channel #</th>
                     <th>Current status</th>
+                    <th>Watts</th>
                     <th>Switch Counts</th>
                     <th>Reset Counts</th>
                 </tr>
@@ -18,6 +19,7 @@
                 <tr>
                     <td><%= channel.channelNumber %></td>
                     <td><%= channel.status %></td>
+                    <td><%= channel.watts %></td>
                     <td id="switchCountChannel<%= channel.channelNumber %>"><%= channel.switchCount %></td>
                     <td><button class="btn btn-primary resetRelaySwitchCounts" data-channel="<%= channel.channelNumber %>">Reset counts</button></td>
                 </tr>
@@ -28,16 +30,13 @@
 </div>
 
 <script>
-
     $(document).ready(function () {
 
         $('.resetRelaySwitchCounts').click(function(){
 
             event.preventDefault();
 
-            var data = {
-                channelNumber: $(this).attr('data-channel')
-            };
+            var data = { channelNumber: $(this).attr('data-channel') };
 
             $.ajax({
                 type: 'POST',
@@ -49,9 +48,8 @@
                 }
             });
 
-
         });
-    });
 
+    }); // document ready
 </script>
 <% include partials/footer.ejs %>

@@ -1,16 +1,17 @@
 var loadProfile = require('../Models/loadProfile');
-
+var relayChannel = require('../Models/relayChannel');
+var i2c = require('../Helpers/isquarecHelper');
 
 var LoadProfileManager = module.exports = {
 
     startTimeSheduler: function () {
 
-        var date2 = new Date();
-        var currentHour2 = date2.getHours();
-        var currentMin2 = date2.getMinutes();
-        var getSec2 = date2.getSeconds();
-
-        console.log(currentHour2, ":" ,currentMin2, " " , getSec2);
+        // var date2 = new Date();
+        // var currentHour2 = date2.getHours();
+        // var currentMin2 = date2.getMinutes();
+        // var getSec2 = date2.getSeconds();
+        //
+        // console.log(currentHour2, ":" ,currentMin2, " " , getSec2);
 
         checkTimeSheduler();
 
@@ -23,8 +24,15 @@ var LoadProfileManager = module.exports = {
                 function (err, profile) {
                     if (err) throw err;
 
-                    if (profile != null)
-                        console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes);
+                    if (profile != null) {
+
+                        i2c.automaticUpdate();
+
+                    }
+
+
+
+                        console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes + " power: " + profile.Power);
 
                 });
         }
@@ -51,7 +59,7 @@ var LoadProfileManager = module.exports = {
         var getSec = date.getSeconds();
         var timeOut = (60 - getSec) * 1000;
 
-        console.log(currentHour, ":" ,currentMin, " " , getSec);
+        console.log("Initial system start time: " + currentHour, ":" ,currentMin, " " , getSec);
 
         setTimeout(function () {
 

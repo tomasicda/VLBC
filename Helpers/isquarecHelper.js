@@ -11,11 +11,11 @@ var i2c = module.exports = {
 
 		for (var channel in channels) {
 
-				console.log('CHANNEL STATUS:::::::::::::: ' ,channels[channel].status);
+				console.log("CHANNEL: " + channels[channel].channelNumber + " STATUS -->>>" + channels[channel].status);
 
 			if (channels[channel].status === true) {
 
-				switch (channels[channel].channelNumber ) {
+				switch (channels[channel].channelNumber) {
 					case 1:
 						i2c.channelsNumber += 1;
 						break;

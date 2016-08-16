@@ -1,5 +1,6 @@
 var loadProfile = require('../Models/loadProfile');
 var relayChannel = require('../Models/relayChannel');
+var relayChannelsManager = require('../Helpers/RelayChannelsManager');
 var i2c = require('../Helpers/isquarecHelper');
 
 var LoadProfileManager = module.exports = {
@@ -18,7 +19,8 @@ var LoadProfileManager = module.exports = {
                     if (profile != null) {
 
                         i2c.automaticUpdate(profile);
-                        console.log("LOAD PROFILE TIME: " + profile.Time.Hours + ":" + profile.Time.Minutes + " POWER: " + profile.Power);
+
+                        console.log("LOAD PROFILE TIME: " + profile.Time.Hours + " hours : " + profile.Time.Minutes + "minutes POWER: " + profile.Power);
                     }
 
                 });
@@ -48,7 +50,7 @@ var LoadProfileManager = module.exports = {
         var getSec = date.getSeconds();
         var timeOut = (60 - getSec) * 1000;
 
-        console.log("Initial system start time: " + currentHour, ":" ,currentMin, " " , getSec);
+        console.log("Initial system start time: " + currentHour, ":" ,currentMin, ":" , getSec);
 
         setTimeout(function () {
 

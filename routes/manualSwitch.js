@@ -37,7 +37,7 @@ manualSwitch.post('/', restrict,function (req, res, next) {
     }
 
     relayChannel.update({channelNumber: channelNumber},
-        {$set: {status: status}
+        {$set: {status: status}}, { $inc: { switchCount: 1 }
     }, function (err, channels) {
             if (err) {
                 console.log(err);

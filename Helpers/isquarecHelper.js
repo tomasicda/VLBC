@@ -81,8 +81,6 @@ var i2c = module.exports = {
 
 		var localNumber =  0;
 		var profilePower = profile.Power;
-	
-			console.log(localNumber, "::::::::::::::::::");
 
 		relayChannel.find({}).sort({watts: 'desc'}).exec(function(err, channels) {
 			if (err){
@@ -93,9 +91,11 @@ var i2c = module.exports = {
 				return res.status(401).send();
 			}
 
+
 			var counter = 1;
 
 			channels.forEach(function(ch) {
+
 
 				if (ch.watts  <= profilePower) {
 							

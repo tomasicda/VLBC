@@ -28,11 +28,8 @@ var LoadProfileManager = module.exports = {
 
                         i2c.automaticUpdate(profile);
                         console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes + " power: " + profile.Power);
+
                     }
-
-
-
-
 
                 });
         }

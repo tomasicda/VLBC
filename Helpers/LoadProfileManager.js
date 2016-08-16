@@ -6,15 +6,6 @@ var LoadProfileManager = module.exports = {
 
     startTimeSheduler: function () {
 
-        // var date2 = new Date();
-        // var currentHour2 = date2.getHours();
-        // var currentMin2 = date2.getMinutes();
-        // var getSec2 = date2.getSeconds();
-        //
-        // console.log(currentHour2, ":" ,currentMin2, " " , getSec2);
-
-        checkTimeSheduler();
-
         function checkTimeSheduler() {
             var date = new Date();
             var currentHour = date.getHours();
@@ -27,12 +18,13 @@ var LoadProfileManager = module.exports = {
                     if (profile != null) {
 
                         i2c.automaticUpdate(profile);
-                        console.log("mongo" + profile.Time.Hours + ":" + profile.Time.Minutes + " power: " + profile.Power);
-
+                        console.log("LOAD PROFILE TIME: " + profile.Time.Hours + ":" + profile.Time.Minutes + " POWER: " + profile.Power);
                     }
 
                 });
         }
+
+        checkTimeSheduler();
 
         setInterval(function () {
 
@@ -41,7 +33,7 @@ var LoadProfileManager = module.exports = {
             var currentMin1 = date1.getMinutes();
             var getSec1 = date1.getSeconds();
 
-            console.log(currentHour1, ":" ,currentMin1, " " , getSec1);
+            console.log("CURRENT SYSTEM(OS) TIME: " + currentHour1 + ":" + currentMin1  + " : " + getSec1);
 
             checkTimeSheduler();
 

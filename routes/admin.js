@@ -8,8 +8,8 @@ var restrict = require('../DAO/Session');
 
 /* GET home page. */
 admin.get('/', restrict,function (req, res, next) {
-    res.render('loadProfiles.ejs', {
-        title: 'loadProfiles | VLBC'
+    res.render('admin.ejs', {
+        title: 'admin | VLBC'
     });
 });
 
@@ -33,10 +33,10 @@ admin.get('/loadProfiles', restrict,function (req, res, next) {
             return res.status(401).send();
         }
 
-        var count = 0;
-        profiles.forEach(function(profile) {
-            
-        });
+        // var count = 0;
+        // profiles.forEach(function(profile) {
+        //
+        // });
 
         
         res.render('loadProfiles', {

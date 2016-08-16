@@ -8,8 +8,8 @@ var restrict = require('../DAO/Session');
 
 /* GET home page. */
 admin.get('/', restrict,function (req, res, next) {
-    res.render('admin.ejs', {
-        title: 'admin | VLBC'
+    res.render('loadProfiles.ejs', {
+        title: 'loadProfiles | VLBC'
     });
 });
 

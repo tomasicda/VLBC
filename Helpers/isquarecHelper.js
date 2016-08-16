@@ -69,7 +69,7 @@ var i2c = module.exports = {
 
 			channels.forEach(function(ch) {
 
-				if (ch.watts  <= profilePower) {
+				if (ch.watts  <= profilePower || ch.watts !== 0) {
 							
 					profilePower =  profilePower - ch.watts;
 

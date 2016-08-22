@@ -1,4 +1,4 @@
-var i2cLib = require('../node_modules/pcduino-i2c/pcduino-i2c');
+//var i2cLib = require('../node_modules/pcduino-i2c/pcduino-i2c');
 var relayChannel = require('../Models/relayChannel');
 
 var i2c = module.exports = {

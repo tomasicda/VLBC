@@ -26,18 +26,13 @@ manualSwitch.get('/', restrict,function (req, res, next) {
     });
 });
 
-manualSwitch.post('/', restrict,function (req, res, next) {
+manualSwitch.post('/switch', restrict,function (req, res, next) {
  
     var channelNumber = req.body.channelNumber;
-    var status;
-    if (req.body.on !== undefined){
-        status = req.body.on;
-    } else{
-        req.body.off;
-    }
+    var status = req.body.status;
 
     relayChannel.update({channelNumber: channelNumber},
-        {$set: {status: status}}, { $inc: { switchCount: 1 }
+        {$set: {status: status}, $inc: { switchCount: 1 }
     }, function (err, channels) {
             if (err) {
                 console.log(err);
@@ -46,7 +41,10 @@ manualSwitch.post('/', restrict,function (req, res, next) {
             if (!channels){
                 return res.status(401).send();
             }
-        res.redirect('/manualSwitch');
+            res.send({
+                channelNum: channelNumber,
+                channelStatus: status
+            });
     });
 });
 

@@ -1,7 +1,7 @@
 var loadProfile = require('../Models/loadProfile');
 var relayChannel = require('../Models/relayChannel');
 var relayChannelsManager = require('../Helpers/RelayChannelsManager');
-//var i2c = require('../Helpers/isquarecHelper');
+var i2c = require('../Helpers/isquarecHelper');
 
 var LoadProfileManager = module.exports = {
 
@@ -15,7 +15,7 @@ var LoadProfileManager = module.exports = {
         var query = {Time:{$gt:{Hours: currentHours, Minutes: currentMinutes}}};
 
         console.log("\n||==============================================");
-        console.log("SYSTEM STARTED AT -> " + currentHours+ ":" + currentMinutes + ":" + currentSeconds + " HMS");
+        console.log("SIMULATION STARTED AT -> " + currentHours+ ":" + currentMinutes + ":" + currentSeconds + " HMS");
         console.log("||==============================================");
 
         // find and run current simulation (Load And Time Data Set) from load profile when system starts
@@ -29,7 +29,7 @@ var LoadProfileManager = module.exports = {
             } else {
                 console.log("\n||==============================================");
                 console.log("RUNNING CURRENT SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
-                //i2c.automaticUpdate(loadTimeDataSet);
+                i2c.automaticUpdate(loadTimeDataSet);
             }
         });
 
@@ -106,7 +106,7 @@ var LoadProfileManager = module.exports = {
                         var today = 'today';
                         var query = {Time:{$gt:{Hours: date.getHours(), Minutes: date.getMinutes()}}};
 
-                        //i2c.automaticUpdate(nextProfileToRun);
+                        i2c.automaticUpdate(loadTimeDataSet);
                         setupNextSimulation(query, today);
 
                     }, loadTimeDataSet.TimeLeft);

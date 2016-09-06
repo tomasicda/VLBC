@@ -45,8 +45,8 @@ var i2c = module.exports = {
 		}
 
 		console.log('BYTE VALUE FOR RELAY SHIELD:::::::::::::: ' ,i2c.channelsNumber);
-		i2cLib.init(relayShieldNumber);
-		i2cLib.enable(i2c.channelsNumber);
+		//i2cLib.init(relayShieldNumber);
+		//i2cLib.enable(i2c.channelsNumber);
 
     },
 	
@@ -127,8 +127,8 @@ var i2c = module.exports = {
 			});
 
 			console.log('BYTE VALUE FOR RELAY SHIELD::: ' , channelsNumber);
-			i2cLib.init(32);
-			i2cLib.enable(channelsNumber);
+			//i2cLib.init(32);
+			//i2cLib.enable(channelsNumber);
 
 		});
 

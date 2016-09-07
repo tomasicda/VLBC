@@ -25,13 +25,13 @@ router.get('/test', restrict,function (req, res){
     });
 });
 
-router.get('/login', restrict, function(req, res){
-    res.render('homePage', {
+router.get('/home', restrict, function(req, res){
+    res.render('home', {
         title: 'Home | VLBC'
     });
 });
 
-router.post('/login',function (req, res, next) {
+router.post('/home',function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
 
@@ -49,7 +49,7 @@ router.post('/login',function (req, res, next) {
             return res.status(401).send();
         }
         req.session.success = true;
-        res.render('homePage', {
+        res.render('home', {
             title: 'Home | VLBC'
         });
     });

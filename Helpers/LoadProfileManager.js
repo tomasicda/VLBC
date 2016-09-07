@@ -1,11 +1,11 @@
 var loadProfile = require('../Models/loadProfile');
 var relayChannel = require('../Models/relayChannel');
 var relayChannelsManager = require('../Helpers/RelayChannelsManager');
-var i2c = require('../Helpers/isquarecHelper');
+var i2cManager = require('../Helpers/iSquareCManager');
 
 var LoadProfileManager = module.exports = {
 
-    timeSheduler: function () {
+    startSimulation: function () {
 
         var date = new Date();
         var currentHours = date.getHours();
@@ -29,7 +29,7 @@ var LoadProfileManager = module.exports = {
             } else {
                 console.log("\n||==============================================");
                 console.log("RUNNING CURRENT SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
-                i2c.automaticUpdate(loadTimeDataSet);
+                i2cManager.automaticUpdate(loadTimeDataSet);
             }
         });
 
@@ -106,7 +106,7 @@ var LoadProfileManager = module.exports = {
                         var today = 'today';
                         var query = {Time:{$gt:{Hours: date.getHours(), Minutes: date.getMinutes()}}};
 
-                        i2c.automaticUpdate(loadTimeDataSet);
+                        i2cManager.automaticUpdate(loadTimeDataSet);
                         setupNextSimulation(query, today);
 
                     }, loadTimeDataSet.TimeLeft);
@@ -117,7 +117,7 @@ var LoadProfileManager = module.exports = {
         } //setupNextSimulation() ends here
 
 
-    } //timeSheduler ends here
+    } //startSimulation ends here
 };
 
 module.exports = LoadProfileManager;

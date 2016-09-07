@@ -78,6 +78,6 @@ app.use(function(err, req, res, next) {
 
 
 //Run time shedule manager (./Helper/LoadProfileManager.js)
-LoadProfileManager.timeSheduler();
+LoadProfileManager.startSimulation();
 
 module.exports = app;

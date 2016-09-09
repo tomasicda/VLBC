@@ -11,6 +11,7 @@
                     <th>Channel</th>
                     <th>Status</th>
                     <th>Switch</th>
+                    <th>Switch Counts<ht>
                 </tr>
             <tbody>
             <%
@@ -22,6 +23,7 @@
                 if(displayingChannelCounter > 8) return false;
 
                 var statusChannel = 'statusChannel-' + channel.channelNumber;
+                var channelCount = 'channelCount-' + channel.channelNumber;
                 var glypicon = 'glyphicon-off';
                 var isToggled = '';
                 if(channel.status === true) {
@@ -30,13 +32,14 @@
                 }
             %>
             <tr>
-                <td><%= channel.channelNumber %></td>
-                <td>
+                <td class="col-sm-3"><%= channel.channelNumber %></td>
+                <td class="col-sm-3">
                     <span id="<%= statusChannel %>" class="glyphicon <%= glypicon %>" aria-hidden="true"></span>
                 </td>
-                <td>
-                    <input class="toggle-switch" type="checkbox" <%= isToggled %> data-channel="<%= channel.channelNumber %>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+                <td class="col-sm-3">
+                    <input class="toggle-switch" type="checkbox" <%= isToggled %> data-channel="<%= channel.channelNumber %>" data-switch-counts="<%= channel.switchCount%>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
                 </td>
+                <td class="col-sm-3" id="<%= channelCount %>"><%= channel.switchCount %></td>
             </tr>
             <% }); %>
             </tbody>
@@ -46,9 +49,13 @@
 <script>
     $(function() {
         $('.toggle-switch').change(function() {
+
+            var channelNumber = $(this).attr('data-channel')
+
             var data = {
-                channelNumber: $(this).attr('data-channel'),
-                status: $(this).prop('checked')
+                channelNumber: channelNumber,
+                status: $(this).prop('checked'),
+                switchCount: parseInt($('#channelCount-' + channelNumber).html())
             };
             $.ajax({
                 type: 'POST',
@@ -57,6 +64,7 @@
                 url: 'manualSwitch/switch',
                 success: function (channel) {
                     $('#statusChannel-' + channel.channelNum).toggleClass('glyphicon-off glyphicon-flash');
+                    $('#channelCount-' + channel.channelNum).html(channel.switchCount);
                 }
             });
         })

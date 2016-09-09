@@ -7,33 +7,25 @@ var LoadProfileManager = module.exports = {
 
     startSimulation: function () {
 
+        // get current time from system
         var date = new Date();
         var currentHours = date.getHours();
         var currentMinutes = date.getMinutes();
         var currentSeconds = date.getSeconds();
         var calculateTimeLeftFor = 'today';
+
+        // prepare query for next simulation setup function
         var query = {Time:{$gt:{Hours: currentHours, Minutes: currentMinutes}}};
 
+        //logging for testing purposes
         console.log("\n||==============================================");
         console.log("SIMULATION STARTED AT -> " + currentHours+ ":" + currentMinutes + ":" + currentSeconds + " HMS");
         console.log("||==============================================");
 
-        // find and run current simulation (Load And Time Data Set) from load profile when system starts
-        loadProfile.findOne({ Time: {$lte: {Hours: currentHours, Minutes: currentMinutes} } }).sort({Time: -1}).limit(1).exec(function (err, loadTimeDataSet) {
-
-            if(err) throw err;
-
-            if(loadTimeDataSet === null) {
-                console.log("\n||==============================================");
-                console.log("SYSTEM CAN'T FIND LOAD TIME DATA SET TO SIMULATE");
-            } else {
-                console.log("\n||==============================================");
-                console.log("RUNNING CURRENT SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
-                i2cManager.automaticUpdate(loadTimeDataSet);
-            }
-        });
-
-        // find next simulation load time data set and calculate seconds left to start
+        /*
+         * - find next simulation load time data set.
+         * - calculate seconds left to start next simulation
+         */
         function getNextSimulationDataSet(query, calculateTimeLeftFor, callback) {
 
             var nextLoadTimeDataSetWithTimeLeftToRun = null;
@@ -43,6 +35,7 @@ var LoadProfileManager = module.exports = {
                 if (err) throw err;
 
                 if (loadTimeDataSet === null) {
+
                     // callback returns null and handled by execution callback function
 
                 } else {
@@ -80,7 +73,6 @@ var LoadProfileManager = module.exports = {
 
         } //getNextSimulationDataSet ends here
 
-        setupNextSimulation(query, calculateTimeLeftFor);
 
         function setupNextSimulation(query, calculateTimeLeftFor) {
 
@@ -100,7 +92,7 @@ var LoadProfileManager = module.exports = {
                     setTimeout(function () {
 
                         console.log("\n||==============================================");
-                        console.log("RUNNING CURRENT SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+                        console.log("CURRENT RUNNING SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
 
                         var date = new Date();
                         var today = 'today';
@@ -115,6 +107,35 @@ var LoadProfileManager = module.exports = {
             }); //getNextSimulationDataSet() ends here
 
         } //setupNextSimulation() ends here
+
+
+        /*
+         * - find current simulation (Load(watts) And Time Data Set) from loadProfile (mongodb collection/table).
+         */
+        loadProfile.findOne({ Time: {$lte: {Hours: currentHours, Minutes: currentMinutes} } }).sort({Time: -1}).limit(1).exec(function (err, loadTimeDataSet) {
+
+            if(err) throw err;
+
+            if(loadTimeDataSet === null) {
+                console.log("\n||==============================================");
+                console.log("SYSTEM CAN'T FIND LOAD TIME DATA SET TO SIMULATE");
+            } else {
+                console.log("\n||==============================================");
+                console.log("CURRENT RUNNING SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+
+                /*
+                 * - calculate which relay channels should be on/off from watts.
+                 * - update each channels' status and switch tally in relayChannel (mongodb collection).
+                 * - signal i2c to write on relay shield hardware itself to switch channels.
+                 */
+                i2cManager.automaticUpdate(loadTimeDataSet);
+            }
+        });
+
+        /*
+         * - set timer to start next simulation
+         */
+        setupNextSimulation(query, calculateTimeLeftFor);
 
 
     } //startSimulation ends here

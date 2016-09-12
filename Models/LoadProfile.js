@@ -1,8 +1,8 @@
+
 var mongoose = require('mongoose');
 
 var loadProfileSchema = new mongoose.Schema({
-    Time: { Hours: Number, Minutes: Number },
-    Power: Number
+    LoadProfileName: String
 });
 
 var loadProfile = mongoose.model('loadProfile', loadProfileSchema, 'loadProfile');

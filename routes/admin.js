@@ -1,9 +1,10 @@
 var express = require('express');
 var admin = express.Router();
 var User = require('../Models/User');
-var loadProfile = require('../Models/loadProfile');
+var loadProfileDataSet = require('../Models/ProfileDataSet');
 var relayChannel = require('../Models/relayChannel');
 var dbConnection = require('../DAO/DBConnection');
+var loadProfile = require('../Models/LoadProfile');
 var restrict = require('../DAO/Session');
 
 /* GET home page. */
@@ -24,7 +25,7 @@ admin.get('/loadProfiles', restrict,function (req, res, next) {
 
     console.log(getHour + ":" + getMin + " " + getSec);
 
-    loadProfile.find(function (err, profiles) {
+    loadProfileDataSet.find(function (err, profiles) {
         if (err){
             console.log(err);
             return res.status(500).send();
@@ -52,24 +53,34 @@ admin.get('/loadProfiles', restrict,function (req, res, next) {
 admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
 
     var profiles = req.body;
+    var loadProfileName = profiles.shift();
+    loadProfileName = loadProfileName.LoadProfileName;
 
-    loadProfile.remove().exec();
+    console.log(loadProfileName);
 
-    profiles.forEach(function(profile) {
 
-        var profe = new loadProfile({
+    loadProfile.create({LoadProfileName: loadProfileName}, function (err, savedProfile) {
+        if (err) throw err;
 
-            Time: {Hours: profile.Time.Hours, Minutes: profile.Time.Minutes },
-            Power: parseFloat(profile.Power)
+        profiles.forEach(function(profile) {
+
+            var profe = new loadProfileDataSet({
+                LoadProfileName: loadProfileName,
+                Time: {Hours: profile.Time.Hours, Minutes: profile.Time.Minutes },
+                Power: parseFloat(profile.Power)
+
+            });
+
+            profe.save(function (err, name) {
+                if(err) throw err;
+                //console.log('profe goes here' + name);
+            });
 
         });
 
-        profe.save(function (err, name) {
-            if(err) throw err;
-            //console.log('profe goes here' + name);
-        });
-
+        res.send({apple: "Apple"});
     });
+
 
 });
 

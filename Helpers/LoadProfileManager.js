@@ -1,4 +1,4 @@
-var loadProfile = require('../Models/loadProfile');
+var profileDataSet = require('../Models/ProfileDataSet');
 var relayChannel = require('../Models/relayChannel');
 var relayChannelsManager = require('../Helpers/RelayChannelsManager');
 var i2cManager = require('../Helpers/iSquareCManager');
@@ -30,7 +30,7 @@ var LoadProfileManager = module.exports = {
 
             var nextLoadTimeDataSetWithTimeLeftToRun = null;
 
-            loadProfile.findOne(query).exec(function (err, loadTimeDataSet) {
+            profileDataSet.findOne(query).exec(function (err, loadTimeDataSet) {
 
                 if (err) throw err;
 
@@ -110,9 +110,9 @@ var LoadProfileManager = module.exports = {
 
 
         /*
-         * - find current simulation (Load(watts) And Time Data Set) from loadProfile (mongodb collection/table).
+         * - find current simulation (Load(watts) And Time Data Set) from profileDataSet (mongodb collection/table).
          */
-        loadProfile.findOne({ Time: {$lte: {Hours: currentHours, Minutes: currentMinutes} } }).sort({Time: -1}).limit(1).exec(function (err, loadTimeDataSet) {
+        profileDataSet.findOne({ Time: {$lte: {Hours: currentHours, Minutes: currentMinutes} } }).sort({Time: -1}).limit(1).exec(function (err, loadTimeDataSet) {
 
             if(err) throw err;
 

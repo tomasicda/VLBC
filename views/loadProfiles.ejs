@@ -3,7 +3,7 @@
 
 <div id="wrapper">
 
-    <h1 class="text-center vlbc-colour-orange">Welcome to VLBC</h1>
+    <h1 class="text-center vlbc-colour-orange">Load Profiles</h1>
 
 
     <!--maybe required by excel uploaded-->
@@ -23,46 +23,42 @@
             <button class="btn btn-success btn-lg" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#addLoadProfile">Add Load Profile<span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span></button>
         </div>
     </div>
-            <!-- Modal -->
-            <div class="modal fade" id="addLoadProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="vertical-alignment-helper">
-                    <div class="modal-dialog vertical-align-center">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-
-                                </button>
-                                <h4 class="modal-title" id="myModalLabel">Name and upload load profile</h4>
-
+    <!-- Modal -->
+    <div class="modal fade" id="addLoadProfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add load profile</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="loadProfileName" class="form-control-label">Load Profile Name</label>
+                                <input type="text" class="form-control" id="loadProfileName">
                             </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="loadProfileName" class="form-control-label">Load Profile Name</label>
-                                        <input type="text" class="form-control" id="loadProfileName">
-                                    </div>
-
-                                    <!-- Upload excel load profile button -->
-                                    <div class="row">
-                                        <div class="text-center">
-                                            <p>
-                                                <!--<input type="file" name="xlfile" id="xlf"/>-->
-                                                <label class="btn btn-primary btn-file">
-                                                    Upload excel file <span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span>
-                                                    <input type="file" id="xlf" name="xlfile" style="display: none;">
-                                                </label>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </form>
+                            <!-- Upload excel load profile button -->
+                            <div class="row">
+                                <div class="text-center">
+                                    <p>
+                                        <!--<input type="file" name="xlfile" id="xlf"/>-->
+                                        <label class="btn btn-primary btn-file">
+                                            Upload excel file <span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span>
+                                            <input type="file" id="xlf" name="xlfile" style="display: none;">
+                                        </label>
+                                    </p>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
 
     <!--&lt;!&ndash; Upload excel load profile button &ndash;&gt;-->
@@ -94,17 +90,44 @@
         <table class="table table-bordered table-striped">
             <thread>
                 <tr>
-                    <th></th>
+                    <th>Load Profile</th>
                     <th></th>
                 </tr>
             </thread>
             <tbody>
+            <%
+            loadProfiles.forEach(function(loadProfile){
+            %>
+                <tr>
+                    <td class="col-sm-6"><%= loadProfile.LoadProfileName %></td>
+                    <td class="col-sm-6">
+                        <form action="/admin/loadProfile" method="post">
+                            <input type="hidden" name="loadProfileName" value="<%= loadProfile.LoadProfileName %>" />
+                            <button type="submit" class="btn btn-primary">View</button>
+                        </form>
+                    </td>
 
+                </tr>
+            <%
+            });
+            %>
             </tbody>
         </table>
     </div>
 
 </div>
+<script>
+    $(document).ajaxStart(function () {
+        //alert("ajaxStart");
+    });
+
+    $(document).ajaxComplete(function () {
+        //alert("ajaxComplete");
+    });
+</script>
+
+
+
 <!-- uncomment the next line here and in xlsxworker.js for encoding support -->
 <!--<script src="dist/cpexcel.js"></script>-->
 <script src="http://oss.sheetjs.com/js-xlsx/shim.js"></script>
@@ -304,6 +327,9 @@
                     success: function (data) {
                         console.log(JSON.stringify(data));
 
+                        if(data.loadProfileNameExists === true) {
+                            $('#loadProfileName').parent('.form-group').addClass('has-error');
+                        }
 
                     }
                 });

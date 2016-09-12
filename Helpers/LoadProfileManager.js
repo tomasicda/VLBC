@@ -1,4 +1,4 @@
-var profileDataSet = require('../Models/ProfileDataSet');
+var profileDataSet = require('../Models/LoadProfileDataSet');
 var relayChannel = require('../Models/relayChannel');
 var relayChannelsManager = require('../Helpers/RelayChannelsManager');
 var i2cManager = require('../Helpers/iSquareCManager');

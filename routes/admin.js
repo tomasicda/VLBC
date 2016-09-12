@@ -1,7 +1,7 @@
 var express = require('express');
 var admin = express.Router();
 var User = require('../Models/User');
-var loadProfileDataSet = require('../Models/ProfileDataSet');
+var loadProfileDataSet = require('../Models/LoadProfileDataSet');
 var relayChannel = require('../Models/relayChannel');
 var dbConnection = require('../DAO/DBConnection');
 var loadProfile = require('../Models/LoadProfile');
@@ -14,37 +14,46 @@ admin.get('/', restrict,function (req, res, next) {
     });
 });
 
-/* GET home page. */
+
 admin.get('/loadProfiles', restrict,function (req, res, next) {
 
-    var date = new Date();
-    var getHour = date.getHours();
-    var getMin = date.getMinutes();
-    var getSec = date.getSeconds();
+    // get all load profile names only (excluding _id)
+    loadProfile.find({}, {LoadProfileName: 1, _id:0}, function(err, loadProfiles){
+       if(err) throw err;
+
+        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$");
+        loadProfiles.forEach(function(profile){
+           console.log(profile.LoadProfileName);
+        });
 
 
-    console.log(getHour + ":" + getMin + " " + getSec);
-
-    loadProfileDataSet.find(function (err, profiles) {
-        if (err){
-            console.log(err);
-            return res.status(500).send();
-        }
-        if (!profiles){
-            return res.status(401).send();
-        }
-
-        // var count = 0;
-        // profiles.forEach(function(profile) {
-        //
-        // });
-
-        
         res.render('loadProfiles', {
             title: 'load profiles - admin | VLBC',
-            loadProfiles: profiles
+            loadProfiles: loadProfiles
         });
-        
+
+    });
+
+});
+
+admin.post('/loadProfile', restrict,function (req, res, next) {
+
+    var loadProfileName = req.body.loadProfileName;
+    console.log(loadProfileName);
+    console.log("@@@@@@@@@@@@@@@@@@@@");
+
+    loadProfileDataSet.find({LoadProfileName: loadProfileName}, function(err, dataSets){
+
+        if(err) throw err;
+
+        dataSets.forEach(function(dataSet){
+           console.log(dataSet.LoadProfileName + " - Power:" + dataSet.Power);
+        });
+
+        res.render('loadProfile', {
+            title: 'Load Profile | VLBC',
+            loadProfile: dataSets
+        });
     });
 
 });

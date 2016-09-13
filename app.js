@@ -76,8 +76,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-//Run time shedule manager (./Helper/LoadProfileManager.js)
-LoadProfileManager.startSimulation();
-
 module.exports = app;

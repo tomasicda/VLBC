@@ -5,6 +5,7 @@ var loadProfileDataSet = require('../Models/LoadProfileDataSet');
 var relayChannel = require('../Models/relayChannel');
 var dbConnection = require('../DAO/DBConnection');
 var loadProfile = require('../Models/LoadProfile');
+var LoadProfileManager = require('../Helpers/LoadProfileManager');
 var restrict = require('../DAO/Session');
 
 /* GET home page. */
@@ -17,15 +18,9 @@ admin.get('/', restrict,function (req, res, next) {
 
 admin.get('/loadProfiles', restrict,function (req, res, next) {
 
-    // get all load profile names only (excluding _id)
-    loadProfile.find({}, {LoadProfileName: 1, _id:0}, function(err, loadProfiles){
+    // get all load profile names and their status only (excluding _id)
+    loadProfile.find({}, {LoadProfileName: 1, RunningStatus: 1, _id:0}, function(err, loadProfiles){
        if(err) throw err;
-
-        console.log("$$$$$$$$$$$$$$$$$$$$$$$$$");
-        loadProfiles.forEach(function(profile){
-           console.log(profile.LoadProfileName);
-        });
-
 
         res.render('loadProfiles', {
             title: 'load profiles - admin | VLBC',
@@ -39,21 +34,39 @@ admin.get('/loadProfiles', restrict,function (req, res, next) {
 admin.post('/loadProfile', restrict,function (req, res, next) {
 
     var loadProfileName = req.body.loadProfileName;
-    console.log(loadProfileName);
-    console.log("@@@@@@@@@@@@@@@@@@@@");
 
     loadProfileDataSet.find({LoadProfileName: loadProfileName}, function(err, dataSets){
 
         if(err) throw err;
 
-        dataSets.forEach(function(dataSet){
-           console.log(dataSet.LoadProfileName + " - Power:" + dataSet.Power);
-        });
-
         res.render('loadProfile', {
             title: 'Load Profile | VLBC',
             loadProfile: dataSets
         });
+    });
+
+});
+
+admin.post('/StartLoadProfile', restrict, function (req, res, next) {
+
+    var startLoadProfile = req.body.runLoadProfileName;
+
+    // Updatiing RunningStatus true of loadProfile to false
+    loadProfile.update({RunningStatus: true}, {RunningStatus: false}, {multi: true},
+        function (err, num) {
+            if (err) throw err;
+            //console.log("Modified load profiles running status:")
+            //console.log(JSON.stringify(num, null, 2));
+    });
+
+    // Update RunningStatus of requested loadProfile to true
+    loadProfile.update({LoadProfileName: startLoadProfile}, {$set: {RunningStatus: true}}, function(err, loadProfile){
+
+        if(err) throw err;
+
+        LoadProfileManager.startSimulation(startLoadProfile);
+
+        res.redirect('loadProfiles');
     });
 
 });
@@ -65,10 +78,7 @@ admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
     var loadProfileName = profiles.shift();
     loadProfileName = loadProfileName.LoadProfileName;
 
-    console.log(loadProfileName);
-
-
-    loadProfile.create({LoadProfileName: loadProfileName}, function (err, savedProfile) {
+    loadProfile.create({LoadProfileName: loadProfileName, RunningStatus: false}, function (err, savedProfile) {
         if (err) throw err;
 
         profiles.forEach(function(profile) {
@@ -87,7 +97,7 @@ admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
 
         });
 
-        res.send({apple: "Apple"});
+        res.send({message: "successful"});
     });
 
 

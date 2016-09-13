@@ -5,19 +5,62 @@
 
     <h1 class="text-center vlbc-colour-orange">Load Profiles</h1>
 
-
-    <!--maybe required by excel uploaded-->
-    <select name="format" hidden>
-        <option value="csv" > CSV</option>
-        <option value="json" selected> JSON</option>
-        <option value="form"> FORMULAE</option>
-    </select>
-    <div id="drop" hidden>Drop an XLSX / XLSM / XLSB / ODS / XLS / XML file here to see sheet data</div>
-
-
     <br/>
     <br/>
     <br/>
+
+    <div class="vlbc-table">
+        <table class="table table-bordered table-striped">
+            <thread>
+                <tr>
+                    <th>Run Load Profile From List</th>
+                    <th>Currently Running Load Profile</th>
+                </tr>
+            </thread>
+            <tbody>
+            <tr>
+                <td class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form action="StartLoadProfile" method="post">
+                                <div class="input-group">
+                                    <select class="form-control col-sm-4" name="runLoadProfileName">
+                                        <option value="" disabled selected>None</option>
+                                        <%
+                                        loadProfiles.forEach(function(loadProfile){
+                                        %>
+                                        <option value="<%= loadProfile.LoadProfileName %>"><%= loadProfile.LoadProfileName %></option>
+                                        <%
+                                        });
+                                        %>
+                                    </select>
+                                    <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary btn-block" type="button">Start</button>
+                                </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+                <td class="col-sm-4">
+                    <%
+                    var currentlyRunning = "";
+                    loadProfiles.forEach(function(loadProfile) {
+                        if(loadProfile.RunningStatus === true){
+                            currentlyRunning = loadProfile.LoadProfileName;
+                        }
+                    }) %>
+                    <%= currentlyRunning %>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </br>
+    </br>
+    </br>
+    </br>
+
     <div class="row">
         <div class="text-center">
             <button class="btn btn-success btn-lg" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#addLoadProfile">Add Load Profile<span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span></button>
@@ -33,23 +76,21 @@
                         <h4 class="modal-title" id="myModalLabel">Add load profile</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <div id="loading" class="text-center hidden">
+                            <img src="/images/loading.gif">
+                        </div>
+                        <form id="modalForm">
                             <div class="form-group">
                                 <label for="loadProfileName" class="form-control-label">Load Profile Name</label>
                                 <input type="text" class="form-control" id="loadProfileName">
                             </div>
                             <!-- Upload excel load profile button -->
-                            <div class="row">
-                                <div class="text-center">
-                                    <p>
-                                        <!--<input type="file" name="xlfile" id="xlf"/>-->
-                                        <label class="btn btn-primary btn-file">
-                                            Upload excel file <span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span>
-                                            <input type="file" id="xlf" name="xlfile" style="display: none;">
-                                        </label>
-                                    </p>
-                                </div>
-                            </div>
+                            <p class="text-center">
+                                <label id="addLoadProfileLabel" class="btn btn-primary btn-file disabled">
+                                    Find and upload excel file <span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span>
+                                    <input disabled type="file" id="xlf" name="xlfile" style="display: none;">
+                                </label>
+                            </p>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -60,31 +101,6 @@
         </div>
     </div>
 
-
-    <!--&lt;!&ndash; Upload excel load profile button &ndash;&gt;-->
-    <!--<div class="row">-->
-        <!--<div class="text-center">-->
-            <!--<p>-->
-                <!--&lt;!&ndash;<input type="file" name="xlfile" id="xlf"/>&ndash;&gt;-->
-                <!--<label class="btn btn-primary btn-file">-->
-                    <!--Upload excel file <span id="AddProfileBtnText" class="glyphicon glyphicon-plus"></span>-->
-                    <!--<input type="file" id="xlf" name="xlfile" style="display: none;">-->
-                <!--</label>-->
-            <!--</p>-->
-        <!--</div>-->
-    <!--</div>-->
-
-
-
-
-    <textarea id="b64data" hidden>... or paste a base64-encoding here</textarea>
-    <input type="button" hidden id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br/>
-
-    <input type="checkbox" name="useworker" hidden ><br/>
-    <input type="checkbox" name="xferable" hidden ><br/>
-    <input type="checkbox" name="userabs" hidden ><br/>
-    <!--<pre id="out"></pre>-->
-    <br/>
 
     <div class="vlbc-table">
         <table class="table table-bordered table-striped">
@@ -98,16 +114,16 @@
             <%
             loadProfiles.forEach(function(loadProfile){
             %>
-                <tr>
-                    <td class="col-sm-6"><%= loadProfile.LoadProfileName %></td>
-                    <td class="col-sm-6">
-                        <form action="/admin/loadProfile" method="post">
-                            <input type="hidden" name="loadProfileName" value="<%= loadProfile.LoadProfileName %>" />
-                            <button type="submit" class="btn btn-primary">View</button>
-                        </form>
-                    </td>
+            <tr>
+                <td class="col-sm-6 loadProfileName"><%= loadProfile.LoadProfileName %></td>
+                <td class="col-sm-6">
+                    <form action="/admin/loadProfile" method="post">
+                        <input type="hidden" name="loadProfileName" value="<%= loadProfile.LoadProfileName %>" />
+                        <button type="submit" class="btn btn-primary">View</button>
+                    </form>
+                </td>
 
-                </tr>
+            </tr>
             <%
             });
             %>
@@ -115,14 +131,101 @@
         </table>
     </div>
 
+
+    <!--maybe required by excel uploaded-->
+    <select name="format" hidden>
+        <option value="csv" > CSV</option>
+        <option value="json" selected> JSON</option>
+        <option value="form"> FORMULAE</option>
+    </select>
+    <div id="drop" hidden>Drop an XLSX / XLSM / XLSB / ODS / XLS / XML file here to see sheet data</div>
+
+    <textarea id="b64data" hidden>... or paste a base64-encoding here</textarea>
+    <input type="button" hidden id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br/>
+
+    <input type="checkbox" name="useworker" hidden ><br/>
+    <input type="checkbox" name="xferable" hidden ><br/>
+    <input type="checkbox" name="userabs" hidden ><br/>
+    <!--<pre id="out"></pre>-->
+    <!--maybe required by excel uploaded-->
+
 </div>
 <script>
+
+    $(document).ready(function(){
+        var currentLoadProfiles = [];
+
+        // get all load profile names
+        $(".loadProfileName").each(function(){
+            currentLoadProfiles.push(($(this).html()));
+        });
+
+        // check with user input load profile name
+        $( "#loadProfileName").keyup(function() {
+            var input = $(this).val().trim();
+
+
+            if(currentLoadProfiles.indexOf(input) > -1) {
+                // name exists in array
+
+                // show red bordered input field
+                $(this).parent(".form-group").addClass("has-error");
+
+                // disable select excel file button
+                $("#addLoadProfileLabel").addClass("disabled");
+                $("#xlf").prop("disabled", true);
+
+                if(!$("#alertMessage").length) {
+                    $(this).parent(".form-group").append('<div id="alertMessage" class="alert alert-danger"><strong>Load Profile with same name exists.</strong></div>');
+                }
+
+                if($("#alertMessage").hasClass("alert-success")) {
+                    $("#alertMessage").removeClass("alert-success").addClass("alert-danger").find("strong").text("Load Profile with same name exists.");
+                }
+
+
+
+            } else if(input === "") {
+                // disable select excel file button
+
+                // remove red border from input filed
+                $(this).parent(".form-group").removeClass("has-error");
+
+                $("#addLoadProfileLabel").addClass("disabled");
+                $("#xlf").prop("disabled", true);
+                $("#alertMessage").removeClass("alert-danger").addClass("alert-success").find("strong").text("Enter Load Profile name");
+
+            } else { // name does not exist in array
+
+                // remove red border from input filed
+                $(this).parent(".form-group").removeClass("has-error");
+
+                // change alert text
+                $("#alertMessage").removeClass("alert-danger").addClass("alert-success").find("strong").text("Looks good!!!");
+
+                // enable select excel file button
+                $("#addLoadProfileLabel").removeClass("disabled");
+                $("#xlf").prop("disabled", false);
+
+            }
+        });
+
+        $('#addLoadProfile').on('shown.bs.modal', function() {
+            $("#loadProfileName").focus();
+            $("#addLoadProfileLabel").addClass("disabled");
+            $("#xlf").prop("disabled", true);
+        })
+
+    });
+
     $(document).ajaxStart(function () {
-        //alert("ajaxStart");
+        $('#modalForm').hide();
+        $('#loading').removeClass('hidden');
     });
 
     $(document).ajaxComplete(function () {
-        //alert("ajaxComplete");
+        $('#loading').addClass('hidden');
+        $('#modalForm').show();
     });
 </script>
 
@@ -327,8 +430,8 @@
                     success: function (data) {
                         console.log(JSON.stringify(data));
 
-                        if(data.loadProfileNameExists === true) {
-                            $('#loadProfileName').parent('.form-group').addClass('has-error');
+                        if(data.message === "successful") {
+                            location.reload();
                         }
 
                     }

@@ -154,8 +154,6 @@ table, th, td {
   top: 50px;
 }
 
-
-
 .vertical-alignment-helper {
   display:table;
   height: 100%;
@@ -224,6 +222,8 @@ table, th, td {
   width: 100%;
 }
 
-
+#alertMessage {
+  margin-top: 1em;
+}
 
 /*==================Admin Page Load Profile Ends=======================*/

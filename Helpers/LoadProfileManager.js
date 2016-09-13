@@ -5,7 +5,11 @@ var i2cManager = require('../Helpers/iSquareCManager');
 
 var LoadProfileManager = module.exports = {
 
-    startSimulation: function () {
+    timer: "",
+
+    startSimulation: function (loadProfileToRun) {
+
+        clearTimeout(LoadProfileManager.timer);
 
         // get current time from system
         var date = new Date();
@@ -15,7 +19,7 @@ var LoadProfileManager = module.exports = {
         var calculateTimeLeftFor = 'today';
 
         // prepare query for next simulation setup function
-        var query = {Time:{$gt:{Hours: currentHours, Minutes: currentMinutes}}};
+        var query = {LoadProfileName: loadProfileToRun, Time:{$gt:{Hours: currentHours, Minutes: currentMinutes}}};
 
         //logging for testing purposes
         console.log("\n||==============================================");
@@ -81,7 +85,7 @@ var LoadProfileManager = module.exports = {
                 if (loadTimeDataSet === null) {
                     console.log("::::::::::NEXT SIMULATION STARTS TOMORROW:::::::::");
                     var calculateTimeLeftFor = 'nextDay';
-                    var query  = {Time:{$gte:{Hours: 0, Minutes: 0}}};
+                    var query  = {LoadProfileName: loadProfileToRun, Time:{$gte:{Hours: 0, Minutes: 0}}};
                     setupNextSimulation(query, calculateTimeLeftFor);
 
                 } else {
@@ -89,14 +93,14 @@ var LoadProfileManager = module.exports = {
                     console.log("NEXT SIMULATION DATA SET TO RUN......POWER: " + loadTimeDataSet.Power + "........TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
                     console.log("||==============================================");
 
-                    setTimeout(function () {
+                    LoadProfileManager.timer = setTimeout(function () {
 
                         console.log("\n||==============================================");
-                        console.log("CURRENT RUNNING SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+                        console.log("CURRENT RUNNING LOAD PROFILE NAME: " + loadTimeDataSet.LoadProfileName + " DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
 
                         var date = new Date();
                         var today = 'today';
-                        var query = {Time:{$gt:{Hours: date.getHours(), Minutes: date.getMinutes()}}};
+                        var query = {LoadProfileName: loadProfileToRun, Time:{$gt:{Hours: date.getHours(), Minutes: date.getMinutes()}}};
 
                         i2cManager.automaticUpdate(loadTimeDataSet);
                         setupNextSimulation(query, today);
@@ -112,7 +116,7 @@ var LoadProfileManager = module.exports = {
         /*
          * - find current simulation (Load(watts) And Time Data Set) from profileDataSet (mongodb collection/table).
          */
-        profileDataSet.findOne({ Time: {$lte: {Hours: currentHours, Minutes: currentMinutes} } }).sort({Time: -1}).limit(1).exec(function (err, loadTimeDataSet) {
+        profileDataSet.findOne({LoadProfileName: loadProfileToRun, Time: {$lte: {Hours: currentHours, Minutes: currentMinutes} } }).sort({Time: -1}).limit(1).exec(function (err, loadTimeDataSet) {
 
             if(err) throw err;
 
@@ -121,7 +125,7 @@ var LoadProfileManager = module.exports = {
                 console.log("SYSTEM CAN'T FIND LOAD TIME DATA SET TO SIMULATE");
             } else {
                 console.log("\n||==============================================");
-                console.log("CURRENT RUNNING SIMULATION DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+                console.log("CURRENT RUNNING LOAD PROFILE NAME: " + loadTimeDataSet.LoadProfileName + "  DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
 
                 /*
                  * - calculate which relay channels should be on/off from watts.
@@ -129,13 +133,13 @@ var LoadProfileManager = module.exports = {
                  * - signal i2c to write on relay shield hardware itself to switch channels.
                  */
                 i2cManager.automaticUpdate(loadTimeDataSet);
+
+                /*
+                 * - set timer to start next simulation
+                 */
+                setupNextSimulation(query, calculateTimeLeftFor);
             }
         });
-
-        /*
-         * - set timer to start next simulation
-         */
-        setupNextSimulation(query, calculateTimeLeftFor);
 
 
     } //startSimulation ends here

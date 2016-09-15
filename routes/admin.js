@@ -52,7 +52,7 @@ admin.post('/StartLoadProfile', restrict, function (req, res, next) {
     var startLoadProfile = req.body.runLoadProfileName;
 
     // Updatiing RunningStatus true of loadProfile to false
-    loadProfile.update({RunningStatus: true}, {RunningStatus: false}, {multi: true},
+    loadProfile.update({RunningStatus: true}, {RunningStatus: false},
         function (err, num) {
             if (err) throw err;
             //console.log("Modified load profiles running status:")
@@ -106,7 +106,7 @@ admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
 
 
 /* GET home page. */
-admin.get('/timeSchedules', restrict,function (req, res, next) {
+admin.get('/timeSchedules', restrict, function (req, res, next) {
 
     var title = req.body.title;
 
@@ -161,13 +161,16 @@ admin.post('/resetRelayCount', restrict, function(req, res, next){
 
     var data = req.body;
 
+
     relayChannel.findOneAndUpdate({channelNumber: data.channelNumber},
                                   {$set: {switchCount: 0}},
-                                  {new: true}, function (err, channel) {
+                                  {new: true},
 
-        if(err) throw err;
+        function (err, channel) {
 
-        res.send({switchCount: channel.switchCount});
+            if(err) throw err;
+
+            res.send({switchCount: channel.switchCount});
     });
 
 });

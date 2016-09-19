@@ -108,25 +108,24 @@
                 <tr>
                     <th>Load Profile</th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thread>
             <tbody>
-            <%
-            loadProfiles.forEach(function(loadProfile){
-            %>
+            <% loadProfiles.forEach(function(loadProfile){ %>
             <tr>
-                <td class="col-sm-6 loadProfileName"><%= loadProfile.LoadProfileName %></td>
-                <td class="col-sm-6">
+                <td class="col-sm-4 loadProfileName"><%= loadProfile.LoadProfileName %></td>
+                <td class="col-sm-4">
                     <form action="/admin/loadProfile" method="post">
                         <input type="hidden" name="loadProfileName" value="<%= loadProfile.LoadProfileName %>" />
                         <button type="submit" class="btn btn-primary">View</button>
                     </form>
                 </td>
-
+                <td class="col-sm-4">
+                    <button value="<%= loadProfile.LoadProfileName %>" class="btn btn-danger deleteLoadProfile">Delete</button>
+                </td>
             </tr>
-            <%
-            });
-            %>
+            <% }); %>
             </tbody>
         </table>
     </div>
@@ -216,6 +215,30 @@
             $("#xlf").prop("disabled", true);
         })
 
+
+        $('.deleteLoadProfile').click(function(event){
+            event.preventDefault();
+
+            console.log($(this).val());
+
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify({loadProfileName: $(this).val()}),
+                contentType: 'application/json',
+                url: 'deleteLoadProfile',
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+
+                    if(data.message === "successful") {
+                        location.reload();
+                    }
+
+                }
+            });
+
+        });
+
+
     });
 
     $(document).ajaxStart(function () {
@@ -227,6 +250,9 @@
         //$('#loading').addClass('hidden');
         //$('#modalForm').show();
     });
+
+
+
 </script>
 
 
@@ -428,7 +454,8 @@
                     contentType: 'application/json',
                     url: 'uploadExcelLoadProfile',
                     success: function (data) {
-                        console.log(JSON.stringify(data));
+                        //console.log(JSON.stringify(data));
+                        console.log(data);
 
                         if(data.message === "successful") {
                             location.reload();

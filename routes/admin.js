@@ -103,6 +103,34 @@ admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
 
 });
 
+admin.post('/deleteLoadProfile', restrict, function(req, res){
+
+    var loadProfileName = req.body.loadProfileName;
+
+    loadProfile.remove({ LoadProfileName: loadProfileName}, function (err) {
+
+        if (err) {
+
+            res.send({message: "unsuccessful"});
+            throw err;
+
+        } else {
+
+            loadProfileDataSet.remove({LoadProfileName: loadProfileName}, function(err){
+
+                if (err) {
+                    res.send({message: "unsuccessful"});
+                    throw err;
+
+                } else {
+                    res.send({message: "successful"});
+                }
+            });
+        }
+
+    });
+
+});
 
 
 /* GET home page. */

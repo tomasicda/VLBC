@@ -21,22 +21,25 @@
             <tr>
                 <td class="col-sm-8">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <form action="StartLoadProfile" method="post">
+                        <div class="col-md-12">
+                            <form action="StartLoadProfile" method="post" class="form-inline">
                                 <div class="input-group">
-                                    <select class="form-control col-sm-4" name="runLoadProfileName">
+                                    <select class="form-control" name="runLoadProfileName">
                                         <option value="" disabled selected>None</option>
-                                        <%
-                                        loadProfiles.forEach(function(loadProfile){
-                                        %>
+                                        <% loadProfiles.forEach(function(loadProfile) { %>
                                         <option value="<%= loadProfile.LoadProfileName %>"><%= loadProfile.LoadProfileName %></option>
-                                        <%
-                                        });
-                                        %>
+                                        <% }); %>
                                     </select>
-                                    <span class="input-group-btn">
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="speed">
+                                        <% for(var tally = 1; tally <= 50; tally++) { %>
+                                        <option value="<%= tally %>"><%= tally %>x</option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <button type="submit" class="btn btn-primary btn-block" type="button">Start</button>
-                                </span>
                                 </div>
                             </form>
                         </div>

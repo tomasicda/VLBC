@@ -7,9 +7,15 @@ var LoadProfileManager = module.exports = {
 
     timer: "",
 
-    startSimulation: function (loadProfileToRun) {
+    runningSpeed: "",
+
+    currentLoadProfileTime: { /* Hours: 0, Minutes: 0 */ },
+
+    startSimulation: function (loadProfileToRun, speed) {
 
         clearTimeout(LoadProfileManager.timer);
+
+        LoadProfileManager.runningSpeed = speed;
 
         // get current time from system
         var date = new Date();
@@ -45,7 +51,7 @@ var LoadProfileManager = module.exports = {
                 } else {
 
                     var date = new Date();
-                    var nextLoadProfileTimeInSeconds, currentTimeInSeconds, secondsLeftForTimeOut;
+                    var nextLoadProfileTimeInSeconds, currentTimeInSeconds, currentLoadProfileTimeInSeconds, secondsLeftForTimeOut;
 
                     function convertHoursToSeconds(hours){
                         return hours * 60 * 60;
@@ -58,18 +64,55 @@ var LoadProfileManager = module.exports = {
                     if(calculateTimeLeftFor === 'today') {
                         nextLoadProfileTimeInSeconds = convertHoursToSeconds(loadTimeDataSet.Time.Hours) + convertMinutesToSeconds(loadTimeDataSet.Time.Minutes);
                         currentTimeInSeconds = convertHoursToSeconds(date.getHours()) + convertMinutesToSeconds(date.getMinutes()) + date.getSeconds();
-                        secondsLeftForTimeOut = nextLoadProfileTimeInSeconds - currentTimeInSeconds;
+                        currentLoadProfileTimeInSeconds = convertHoursToSeconds(LoadProfileManager.currentLoadProfileTime.Hours) + convertMinutesToSeconds(LoadProfileManager.currentLoadProfileTime.Minutes);
+
+                        // NEED TO SUBTRACT FROM WHATEVER IS HIGHER VALUE BETWEEN currentLoadProfileTimeInSeconds OR currentTimeInSeconds THAT SHOULD FIX THE ISSUE
+                        if(currentLoadProfileTimeInSeconds > currentTimeInSeconds || currentTimeInSeconds > nextLoadProfileTimeInSeconds) {
+                            secondsLeftForTimeOut = nextLoadProfileTimeInSeconds - currentLoadProfileTimeInSeconds;
+                        } else {
+                            secondsLeftForTimeOut = nextLoadProfileTimeInSeconds - currentTimeInSeconds;
+                        }
+
+                        // testing
+                        console.log("Next Load Profile Seconds: " + nextLoadProfileTimeInSeconds);
+                        console.log("Current Load Profile Seconds: " + currentLoadProfileTimeInSeconds);
+                        console.log("System time Seconds: " + currentTimeInSeconds);
 
                     } else if (calculateTimeLeftFor === 'nextDay') {
                         nextLoadProfileTimeInSeconds = convertHoursToSeconds(loadTimeDataSet.Time.Hours) + convertMinutesToSeconds(loadTimeDataSet.Time.Minutes);
                         currentTimeInSeconds = convertHoursToSeconds(date.getHours()) + convertMinutesToSeconds(date.getMinutes()) + date.getSeconds();
-                        var timeToNextDay = 86400 - currentTimeInSeconds;
+                        currentLoadProfileTimeInSeconds = convertHoursToSeconds(LoadProfileManager.currentLoadProfileTime.Hours) + convertMinutesToSeconds(LoadProfileManager.currentLoadProfileTime.Minutes);
+
+
+                        // testing
+                        console.log("Next Load Profile Seconds: " + nextLoadProfileTimeInSeconds);
+                        console.log("Current Load Profile Seconds: " + currentLoadProfileTimeInSeconds);
+                        console.log("System time Seconds: " + currentTimeInSeconds);
+
+                        //var timeToNextDay = 86400 - currentLoadProfileTimeInSeconds;
+                        var timeToNextDay = 86400;
+
+                        if(currentLoadProfileTimeInSeconds > currentTimeInSeconds || currentTimeInSeconds > nextLoadProfileTimeInSeconds) {
+                            timeToNextDay = timeToNextDay - currentLoadProfileTimeInSeconds;
+                        } else {
+                            timeToNextDay = timeToNextDay - currentTimeInSeconds;
+                        }
+
+
                         secondsLeftForTimeOut =  timeToNextDay + nextLoadProfileTimeInSeconds;
                     }
 
-                    loadTimeDataSet.TimeLeft = secondsLeftForTimeOut * 1000 ;
+                    loadTimeDataSet.TimeLeft = secondsLeftForTimeOut * 1000 / LoadProfileManager.runningSpeed;
+
+                    console.log("LOAD PROFILE SPEED: " + LoadProfileManager.runningSpeed + "x.........SECONDS LEFT FOR NEXT PROFILE TO RUN: " + loadTimeDataSet.TimeLeft / 1000);
+
                     nextLoadTimeDataSetWithTimeLeftToRun = loadTimeDataSet;
+
+                    LoadProfileManager.currentLoadProfileTime.Hours = loadTimeDataSet.Time.Hours;
+                    LoadProfileManager.currentLoadProfileTime.Minutes = loadTimeDataSet.Time.Minutes;
                 }
+
+
 
                 callback(nextLoadTimeDataSetWithTimeLeftToRun);
 
@@ -98,9 +141,10 @@ var LoadProfileManager = module.exports = {
                         console.log("\n||==============================================");
                         console.log("CURRENT RUNNING LOAD PROFILE NAME: " + loadTimeDataSet.LoadProfileName + " DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
 
-                        var date = new Date();
+                        //var date = new Date();
                         var today = 'today';
-                        var query = {LoadProfileName: loadProfileToRun, Time:{$gt:{Hours: date.getHours(), Minutes: date.getMinutes()}}};
+                        //var query = {LoadProfileName: loadProfileToRun, Time:{$gt:{Hours: date.getHours(), Minutes: date.getMinutes()}}};
+                        var query = {LoadProfileName: loadProfileToRun, Time:{$gt:{Hours: LoadProfileManager.currentLoadProfileTime.Hours, Minutes: LoadProfileManager.currentLoadProfileTime.Minutes }}};
 
                         i2cManager.automaticUpdate(loadTimeDataSet);
                         setupNextSimulation(query, today);
@@ -126,6 +170,9 @@ var LoadProfileManager = module.exports = {
             } else {
                 console.log("\n||==============================================");
                 console.log("CURRENT RUNNING LOAD PROFILE NAME: " + loadTimeDataSet.LoadProfileName + "  DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+
+                LoadProfileManager.currentLoadProfileTime.Hours = loadTimeDataSet.Time.Hours;
+                LoadProfileManager.currentLoadProfileTime.Minutes = loadTimeDataSet.Time.Minutes;
 
                 /*
                  * - calculate which relay channels should be on/off from watts.

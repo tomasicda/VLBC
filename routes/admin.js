@@ -50,8 +50,9 @@ admin.post('/loadProfile', restrict,function (req, res, next) {
 admin.post('/StartLoadProfile', restrict, function (req, res, next) {
 
     var startLoadProfile = req.body.runLoadProfileName;
+    var speed = req.body.speed;
 
-    // Updatiing RunningStatus true of loadProfile to false
+    // Updating currently Running loadProfile status to false
     loadProfile.update({RunningStatus: true}, {RunningStatus: false},
         function (err, num) {
             if (err) throw err;
@@ -64,7 +65,8 @@ admin.post('/StartLoadProfile', restrict, function (req, res, next) {
 
         if(err) throw err;
 
-        LoadProfileManager.startSimulation(startLoadProfile);
+        // start load profile simulation
+        LoadProfileManager.startSimulation(startLoadProfile, speed);
 
         res.redirect('loadProfiles');
     });

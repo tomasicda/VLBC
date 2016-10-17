@@ -1,42 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../Models/User');
-var dbConnection = require('../DAO/DBConnection');
-var restrict = require('../DAO/Session');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.render('index', {
         title: 'Login | VLBC', success: req.session.success
     });
 });
 
-router.get('/logout', function(req, res){
-    // destroy the user's session to log them out
-    // will be re-created next request
+router.get('/logout', function(req, res) {
     req.session.destroy(function(){
         res.redirect('/');
     });
 });
 
-router.get('/test', restrict,function (req, res){
-    res.render('test', {
-        title: 'Test | VLBC'
-    });
-});
-
-router.get('/home', restrict, function(req, res){
-    res.render('home', {
-        title: 'Home | VLBC'
-    });
-});
-
-router.post('/home',function (req, res, next) {
+router.post('/login', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
 
     User.findOne({username: username, password: password}, function (err, user) {
-        //console.log(user);
+
         if (err){
             req.session.success = false;
             console.log(err);
@@ -49,9 +33,8 @@ router.post('/home',function (req, res, next) {
             return res.status(401).send();
         }
         req.session.success = true;
-        res.render('home', {
-            title: 'Home | VLBC'
-        });
+
+        res.redirect('/admin/loadProfiles');
     });
 });
 

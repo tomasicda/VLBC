@@ -11,9 +11,14 @@ var LoadProfileManager = module.exports = {
 
     currentLoadProfileTime: { /* Hours: 0, Minutes: 0 */ },
 
+    stopSimulation: function() {
+        clearTimeout(LoadProfileManager.timer);
+        LoadProfileManager.runningSpeed = "";
+    },
+
     startSimulation: function (loadProfileToRun, speed) {
 
-        clearTimeout(LoadProfileManager.timer);
+        LoadProfileManager.stopSimulation();
 
         LoadProfileManager.runningSpeed = speed;
 
@@ -74,9 +79,9 @@ var LoadProfileManager = module.exports = {
                         }
 
                         // testing
-                        console.log("Next Load Profile Seconds: " + nextLoadProfileTimeInSeconds);
-                        console.log("Current Load Profile Seconds: " + currentLoadProfileTimeInSeconds);
-                        console.log("System time Seconds: " + currentTimeInSeconds);
+                        // console.log("Next Load Profile Seconds: " + nextLoadProfileTimeInSeconds);
+                        // console.log("Current Load Profile Seconds: " + currentLoadProfileTimeInSeconds);
+                        // console.log("System time Seconds: " + currentTimeInSeconds);
 
                     } else if (calculateTimeLeftFor === 'nextDay') {
                         nextLoadProfileTimeInSeconds = convertHoursToSeconds(loadTimeDataSet.Time.Hours) + convertMinutesToSeconds(loadTimeDataSet.Time.Minutes);
@@ -85,9 +90,9 @@ var LoadProfileManager = module.exports = {
 
 
                         // testing
-                        console.log("Next Load Profile Seconds: " + nextLoadProfileTimeInSeconds);
-                        console.log("Current Load Profile Seconds: " + currentLoadProfileTimeInSeconds);
-                        console.log("System time Seconds: " + currentTimeInSeconds);
+                        // console.log("Next Load Profile Seconds: " + nextLoadProfileTimeInSeconds);
+                        // console.log("Current Load Profile Seconds: " + currentLoadProfileTimeInSeconds);
+                        // console.log("System time Seconds: " + currentTimeInSeconds);
 
                         //var timeToNextDay = 86400 - currentLoadProfileTimeInSeconds;
                         var timeToNextDay = 86400;
@@ -139,7 +144,7 @@ var LoadProfileManager = module.exports = {
                     LoadProfileManager.timer = setTimeout(function () {
 
                         console.log("\n||==============================================");
-                        console.log("CURRENT RUNNING LOAD PROFILE NAME: " + loadTimeDataSet.LoadProfileName + " DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+                        console.log("CURRENT RUNNING LOAD PROFILE NAME: \"" + loadTimeDataSet.LoadProfileName + "\" -- DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
 
                         //var date = new Date();
                         var today = 'today';
@@ -169,7 +174,7 @@ var LoadProfileManager = module.exports = {
                 console.log("SYSTEM CAN'T FIND LOAD TIME DATA SET TO SIMULATE");
             } else {
                 console.log("\n||==============================================");
-                console.log("CURRENT RUNNING LOAD PROFILE NAME: " + loadTimeDataSet.LoadProfileName + "  DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
+                console.log("CURRENT RUNNING LOAD PROFILE NAME: \"" + loadTimeDataSet.LoadProfileName + "\" -- DATA SET......Power: " + loadTimeDataSet.Power + ".......TIME " + loadTimeDataSet.Time.Hours + ":" + loadTimeDataSet.Time.Minutes);
 
                 LoadProfileManager.currentLoadProfileTime.Hours = loadTimeDataSet.Time.Hours;
                 LoadProfileManager.currentLoadProfileTime.Minutes = loadTimeDataSet.Time.Minutes;

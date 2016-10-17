@@ -3,35 +3,28 @@ var admin = express.Router();
 var User = require('../Models/User');
 var loadProfileDataSet = require('../Models/LoadProfileDataSet');
 var relayChannel = require('../Models/relayChannel');
-var dbConnection = require('../DAO/DBConnection');
 var loadProfile = require('../Models/LoadProfile');
 var LoadProfileManager = require('../Helpers/LoadProfileManager');
 var restrict = require('../DAO/Session');
 
-/* GET home page. */
-admin.get('/', restrict,function (req, res, next) {
-    res.render('admin.ejs', {
-        title: 'admin | VLBC'
-    });
-});
 
-
-admin.get('/loadProfiles', restrict,function (req, res, next) {
+admin.get('/loadProfiles', restrict,function (req, res) {
 
     // get all load profile names and their status only (excluding _id)
-    loadProfile.find({}, {LoadProfileName: 1, RunningStatus: 1, _id:0}, function(err, loadProfiles){
-       if(err) throw err;
+    loadProfile.find({}, {LoadProfileName: 1, RunningStatus: 1, _id:0}, function(err, loadProfiles) {
+
+        if(err) throw err;
 
         res.render('loadProfiles', {
             title: 'load profiles - admin | VLBC',
-            loadProfiles: loadProfiles
+            loadProfiles: loadProfiles,
+            runningSpeed: LoadProfileManager.runningSpeed
         });
-
     });
 
 });
 
-admin.post('/loadProfile', restrict,function (req, res, next) {
+admin.post('/loadProfile', restrict,function (req, res) {
 
     var loadProfileName = req.body.loadProfileName;
 
@@ -56,6 +49,8 @@ admin.post('/StartLoadProfile', restrict, function (req, res, next) {
     loadProfile.update({RunningStatus: true}, {RunningStatus: false},
         function (err, num) {
             if (err) throw err;
+
+            // test logs
             //console.log("Modified load profiles running status:")
             //console.log(JSON.stringify(num, null, 2));
     });
@@ -74,7 +69,16 @@ admin.post('/StartLoadProfile', restrict, function (req, res, next) {
 });
 
 
-admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
+admin.post('/StopLoadProfile', restrict, function (req, res) {
+
+    LoadProfileManager.stopSimulation();
+
+    res.redirect('loadProfiles');
+});
+
+
+
+admin.post('/uploadExcelLoadProfile', restrict, function(req, res) {
 
     var profiles = req.body;
     var loadProfileName = profiles.shift();
@@ -94,6 +98,8 @@ admin.post('/uploadExcelLoadProfile', restrict, function(req, res, next) {
 
             profe.save(function (err, name) {
                 if(err) throw err;
+
+                // test logs
                 //console.log('profe goes here' + name);
             });
 
@@ -134,33 +140,6 @@ admin.post('/deleteLoadProfile', restrict, function(req, res){
 
 });
 
-
-/* GET home page. */
-admin.get('/timeSchedules', restrict, function (req, res, next) {
-
-    var title = req.body.title;
-
-    // relayChannel.find(function (err, channels) {
-    //     if (err){
-    //         console.log(err);
-    //         return res.status(500).send();
-    //     }
-    //     if (!channels){
-    //         return res.status(401).send();
-    //     }
-    //
-    //     res.send(channels);
-    // });
-
-
-    res.render('timeSchedules', {
-        title: 'time shedules - admin | VLBC'
-    });
-
-});
-
-
-
 /* getting relay channel details with ajax call */
 admin.get('/relayChannels', restrict, function(req, res, next){
 
@@ -173,6 +152,7 @@ admin.get('/relayChannels', restrict, function(req, res, next){
             return res.status(401).send();
         }
 
+        // testing logs
         // channels.forEach(function(channel) {
         //    console.log(channel.channelNumber);
         //     console.log(channel.watts);
@@ -191,15 +171,11 @@ admin.post('/resetRelayCount', restrict, function(req, res, next){
 
     var data = req.body;
 
-
     relayChannel.findOneAndUpdate({channelNumber: data.channelNumber},
                                   {$set: {switchCount: 0}},
                                   {new: true},
-
         function (err, channel) {
-
             if(err) throw err;
-
             res.send({switchCount: channel.switchCount});
     });
 

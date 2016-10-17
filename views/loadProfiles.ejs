@@ -5,60 +5,124 @@
 
     <h1 class="text-center vlbc-colour-orange">Load Profiles</h1>
 
-    <br/>
-    <br/>
-    <br/>
+    <%
+    var currentlyRunning = "";
 
-    <div class="vlbc-table">
-        <table class="table table-bordered table-striped">
-            <thread>
-                <tr>
-                    <th>Run Load Profile From List</th>
-                    <th>Currently Running Load Profile</th>
-                </tr>
-            </thread>
-            <tbody>
-            <tr>
-                <td class="col-sm-8">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form action="StartLoadProfile" method="post" class="form-inline">
-                                <div class="input-group">
-                                    <select class="form-control" name="runLoadProfileName">
-                                        <option value="" disabled selected>None</option>
-                                        <% loadProfiles.forEach(function(loadProfile) { %>
-                                        <option value="<%= loadProfile.LoadProfileName %>"><%= loadProfile.LoadProfileName %></option>
-                                        <% }); %>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" name="speed">
-                                        <% for(var tally = 1; tally <= 50; tally++) { %>
-                                        <option value="<%= tally %>"><%= tally %>x</option>
-                                        <% } %>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary btn-block" type="button">Start</button>
-                                </div>
-                            </form>
+    if(runningSpeed) {
+        loadProfiles.forEach(function(loadProfile) {
+            if(loadProfile.RunningStatus === true){
+                currentlyRunning = loadProfile.LoadProfileName + " (" + runningSpeed + "x speed)";
+            }
+        });
+    }
+
+    if (currentlyRunning !== "") { %>
+
+        <div class="vlbc-container">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Currently Running Load Profile</h3>
+                </div>
+                <div class="panel-body">
+
+                    <form action="StopLoadProfile" method="post" class="form-inline">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <%= currentlyRunning %>
+                            </div>
                         </div>
+                        <button type="submit" class="btn btn-danger">Stop</button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+    <div class="vlbc-container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Start Load Profile</h3>
+            </div>
+            <div class="panel-body">
+
+                <form action="StartLoadProfile" method="post" class="form-inline">
+                    <div class="input-group">
+                        <select class="form-control" name="runLoadProfileName">
+                            <option value="" disabled selected>None</option>
+                            <% loadProfiles.forEach(function(loadProfile) { %>
+                            <option value="<%= loadProfile.LoadProfileName %>"><%= loadProfile.LoadProfileName %></option>
+                            <% }); %>
+                        </select>
                     </div>
-                </td>
-                <td class="col-sm-4">
-                    <%
-                    var currentlyRunning = "";
-                    loadProfiles.forEach(function(loadProfile) {
-                        if(loadProfile.RunningStatus === true){
-                            currentlyRunning = loadProfile.LoadProfileName;
-                        }
-                    }) %>
-                    <%= currentlyRunning %>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <div class="form-group">
+                        <select class="form-control" name="speed">
+                            <% for(var tally = 1; tally <= 50; tally++) { %>
+                            <option value="<%= tally %>"><%= tally %>x</option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Start</button>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
     </div>
+
+
+    <% } %>
+
+    <!--<div class="vlbc-table">-->
+        <!--<table class="table table-bordered table-striped">-->
+            <!--<thread>-->
+                <!--<tr>-->
+                    <!--<th>Run Load Profile From List</th>-->
+                    <!--<th>Currently Running Load Profile</th>-->
+                <!--</tr>-->
+            <!--</thread>-->
+            <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td class="col-sm-8">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-md-12">-->
+                            <!--<form action="StartLoadProfile" method="post" class="form-inline">-->
+                                <!--<div class="input-group">-->
+                                    <!--<select class="form-control" name="runLoadProfileName">-->
+                                        <!--<option value="" disabled selected>None</option>-->
+                                        <!--<% loadProfiles.forEach(function(loadProfile) { %>-->
+                                        <!--<option value="<%= loadProfile.LoadProfileName %>"><%= loadProfile.LoadProfileName %></option>-->
+                                        <!--<% }); %>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                                <!--<div class="form-group">-->
+                                    <!--<select class="form-control" name="speed">-->
+                                        <!--<% for(var tally = 1; tally <= 50; tally++) { %>-->
+                                        <!--<option value="<%= tally %>"><%= tally %>x</option>-->
+                                        <!--<% } %>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                                <!--<div class="form-group">-->
+                                    <!--<button type="submit" class="btn btn-primary btn-block" type="button">Start</button>-->
+                                <!--</div>-->
+                            <!--</form>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</td>-->
+                <!--<td class="col-sm-4">-->
+
+
+                <!--</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>-->
     </br>
     </br>
     </br>

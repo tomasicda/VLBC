@@ -9,7 +9,6 @@
         <table class="table table-bordered table-striped">
                 <tr>
                     <th>Channel</th>
-                    <th>Status</th>
                     <th>Switch</th>
                     <th>Switch Counts<ht>
                 </tr>
@@ -24,18 +23,13 @@
 
                 var statusChannel = 'statusChannel-' + channel.channelNumber;
                 var channelCount = 'channelCount-' + channel.channelNumber;
-                var glypicon = 'glyphicon-off';
                 var isToggled = '';
                 if(channel.status === true) {
-                    glypicon = 'glyphicon-flash';
                     isToggled = 'checked';
                 }
             %>
             <tr>
                 <td class="col-sm-3"><%= channel.channelNumber %></td>
-                <td class="col-sm-3">
-                    <span id="<%= statusChannel %>" class="glyphicon <%= glypicon %>" aria-hidden="true"></span>
-                </td>
                 <td class="col-sm-3">
                     <input class="toggle-switch" type="checkbox" <%= isToggled %> data-channel="<%= channel.channelNumber %>" data-switch-counts="<%= channel.switchCount%>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
                 </td>
@@ -62,9 +56,8 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 url: 'manualSwitch/switch',
-                success: function (channel) {
-                    $('#statusChannel-' + channel.channelNum).toggleClass('glyphicon-off glyphicon-flash');
-                    $('#channelCount-' + channel.channelNum).html(channel.switchCount);
+                success: function () {
+
                 }
             });
         })

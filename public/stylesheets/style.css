@@ -73,7 +73,7 @@ h1 {
 
 
 
-/*==================VLBC Special Colours Region Starts=======================*/
+/*==================VLBC Special Region Starts=======================*/
 .vlbc-colour-orange {
   color: #f2b632;
 }
@@ -114,11 +114,19 @@ table, th, td {
   text-align:center;
 }
 
-.vlbc-margin{
+.vlbc-margin {
   padding: 1%;
   width: 10%;
 }
-/*==================VLBC Special Colours Region Ends=======================*/
+
+.vlbc-container {
+  margin-left: 10%;
+  margin-right: 10%;
+  text-align: center;
+  margin-top: 1.5em;
+}
+
+/*==================VLBC Special Region Ends=======================*/
 
 
 
